@@ -11,20 +11,34 @@
 #   git config core.hooksPath .config/git-hooks
 #
 
-# Check if gitleaks is installed
-if ! command -v gitleaks &> /dev/null; then
-    echo "WARNING: gitleaks is not installed."
-    echo "Install with: brew install gitleaks (macOS) or see https://github.com/gitleaks/gitleaks"
+# Find gitleaks - check common locations
+GITLEAKS=""
+if command -v gitleaks &> /dev/null; then
+    GITLEAKS="gitleaks"
+elif [ -f "/c/Users/$USER/AppData/Local/Microsoft/WinGet/Packages/Gitleaks.Gitleaks_Microsoft.Winget.Source_8wekyb3d8bbwe/gitleaks.exe" ]; then
+    GITLEAKS="/c/Users/$USER/AppData/Local/Microsoft/WinGet/Packages/Gitleaks.Gitleaks_Microsoft.Winget.Source_8wekyb3d8bbwe/gitleaks.exe"
+elif [ -f "$HOME/AppData/Local/Microsoft/WinGet/Packages/Gitleaks.Gitleaks_Microsoft.Winget.Source_8wekyb3d8bbwe/gitleaks.exe" ]; then
+    GITLEAKS="$HOME/AppData/Local/Microsoft/WinGet/Packages/Gitleaks.Gitleaks_Microsoft.Winget.Source_8wekyb3d8bbwe/gitleaks.exe"
+fi
+
+# ENFORCE - block commit if gitleaks not found
+if [ -z "$GITLEAKS" ]; then
+    echo "ERROR: gitleaks is not installed."
     echo ""
-    echo "Skipping secret scan. To enforce, install gitleaks."
-    exit 0
+    echo "Install with:"
+    echo "  macOS:   brew install gitleaks"
+    echo "  Windows: winget install Gitleaks.Gitleaks"
+    echo "  Linux:   https://github.com/gitleaks/gitleaks#installing"
+    echo ""
+    echo "Commit blocked. Install gitleaks to proceed."
+    exit 1
 fi
 
 # Run gitleaks on staged changes
 echo "Running gitleaks secret scan..."
 
 # Use protect mode to scan staged changes
-gitleaks protect --staged --verbose --redact
+"$GITLEAKS" protect --staged --verbose --redact
 
 exit_code=$?
 
