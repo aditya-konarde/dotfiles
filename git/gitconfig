@@ -1,0 +1,35 @@
+[user]
+    # These are intentionally left blank and should be configured locally
+    # name = Your Name
+    # email = your.email@example.com
+
+[core]
+    editor = vim
+    excludesfile = ~/.gitignore_global
+    autocrlf = input
+
+[color]
+    ui = auto
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[push]
+    default = current
+
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+    type = cat-file -t
+    dump = cat-file -p
+    last = log -1 HEAD
+
+[include]
+    # Include a local gitconfig for machine-specific settings
+    path = ~/.gitconfig.local

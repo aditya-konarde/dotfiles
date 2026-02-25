@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+# Source all configuration files
+for config_file ($DOTFILES_DIR/shell/*.zsh); do
+  source $config_file
+done
+
+# Source local customizations if they exist
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# Load fzf if available
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
