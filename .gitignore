@@ -132,3 +132,13 @@ temp/
 *.local
 *.local.*
 config.local.*
+
+# =============================================================================
+# Application Credential Files (never commit)
+# =============================================================================
+
+# GitHub CLI tokens
+.config/gh/hosts.yml
+
+# Fish shell variables (may contain secrets via universal vars)
+.config/fish/fish_variables
