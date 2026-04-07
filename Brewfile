@@ -64,6 +64,7 @@ brew "protobuf"     # Protocol buffers
 cask "headlamp"     # Kubernetes UI
 cask "latest"       # Software update checker
 cask "ollamac"      # Local LLM runner
+cask "alacritty"     # GPU-accelerated terminal emulator
 cask "iterm2"       # Terminal emulator
 cask "visual-studio-code"  # Code editor
 cask "docker"       # Containerization 

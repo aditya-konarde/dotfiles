@@ -1,0 +1,86 @@
+# Font
+[font]
+size = 12.0
+
+[font.normal]
+family = "MesloLGS Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "MesloLGS Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "MesloLGS Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "MesloLGS Nerd Font"
+style = "Bold Italic"
+
+# Cursor
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+thickness = 0.15
+blink_interval = 750
+unfocused_hollow = true
+
+# Scrolling
+[scrolling]
+history = 10000
+
+# Window
+[window]
+padding = { x = 8, y = 8 }
+decorations = "None"
+opacity = 0.92
+dynamic_title = true
+
+[window.class]
+instance = "Alacritty"
+general = "Alacritty"
+
+# Bell
+[bell]
+duration = 0
+
+# Mouse
+[selection]
+save_to_clipboard = true
+
+# ── Catppuccin Mocha theme ──
+[colors.primary]
+foreground = "#CDD6F4"
+background = "#1E1E2E"
+
+[colors.cursor]
+text = "#1E1E2E"
+cursor = "#F5E0DC"
+
+[colors.selection]
+text = "#1E1E2E"
+background = "#F5E0DC"
+
+[colors.normal]
+black   = "#45475A"
+red     = "#F38BA8"
+green   = "#A6E3A1"
+yellow  = "#F9E2AF"
+blue    = "#89B4FA"
+magenta = "#F5C2E7"
+cyan    = "#94E2D5"
+white   = "#BAC2DE"
+
+[colors.bright]
+black   = "#585B70"
+red     = "#F38BA8"
+green   = "#A6E3A1"
+yellow  = "#F9E2AF"
+blue    = "#89B4FA"
+magenta = "#F5C2E7"
+cyan    = "#94E2D5"
+white   = "#A6ADC8"
+
+# Environment
+[env]
+TERM = "xterm-256color"
