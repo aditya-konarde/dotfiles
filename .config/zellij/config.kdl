@@ -1,0 +1,137 @@
+// Zellij config - Kitty-like tiling keybindings
+// Keybinding philosophy: Ctrl+Shift as the main modifier (matching Kitty)
+
+// ── General Settings ──
+
+theme "catppuccin-mocha"
+default_shell "fish"
+pane_frames false
+copy_on_select true
+show_startup_tips false
+show_release_notes false
+scrollback_lines 10000
+mouse_mode true
+
+// ── Keybindings ──
+// We clear defaults and define everything explicitly to match Kitty's tiling UX.
+// The goal: Ctrl+Shift prefix for all tiling actions, no modal keybinds.
+
+keybinds clear-defaults=true {
+    normal {
+        // Splits (matching Kitty's ctrl+shift+enter)
+        bind "Ctrl Shift Enter" { NewPane; }
+        bind "Ctrl Shift |"     { NewPane "Right"; }
+        bind "Ctrl Shift -"     { NewPane "Down"; }
+
+        // Layout cycling (matching Kitty's ctrl+shift+l)
+        bind "Ctrl Shift L" { NextSwapLayout; }
+
+        // Toggle fullscreen / stack (matching Kitty's ctrl+shift+z)
+        bind "Ctrl Shift Z" { ToggleFocusFullscreen; }
+
+        // Navigate splits (matching Kitty's ctrl+shift+arrows)
+        bind "Ctrl Shift Left"  { MoveFocus "Left"; }
+        bind "Ctrl Shift Right" { MoveFocus "Right"; }
+        bind "Ctrl Shift Up"    { MoveFocus "Up"; }
+        bind "Ctrl Shift Down"  { MoveFocus "Down"; }
+
+        // Resize mode (matching Kitty's ctrl+shift+r)
+        bind "Ctrl Shift R" { SwitchToMode "Resize"; }
+
+        // Close pane
+        bind "Ctrl Shift X" { CloseFocus; }
+
+        // Tab management
+        bind "Ctrl Shift T" { NewTab; }
+        bind "Ctrl Shift W" { CloseTab; }
+        bind "Ctrl Shift Tab" { GoToNextTab; }
+        bind "Ctrl Shift 1" { GoToTab 1; }
+        bind "Ctrl Shift 2" { GoToTab 2; }
+        bind "Ctrl Shift 3" { GoToTab 3; }
+        bind "Ctrl Shift 4" { GoToTab 4; }
+        bind "Ctrl Shift 5" { GoToTab 5; }
+        bind "Ctrl Shift 6" { GoToTab 6; }
+        bind "Ctrl Shift 7" { GoToTab 7; }
+        bind "Ctrl Shift 8" { GoToTab 8; }
+        bind "Ctrl Shift 9" { GoToTab 9; }
+
+        // Session management
+        bind "Ctrl Shift D" { Detach; }
+        bind "Ctrl Shift S" { SwitchToMode "Session"; }
+
+        // Scroll mode
+        bind "Ctrl Shift PageUp" { SwitchToMode "Scroll"; }
+
+        // Unlock/Lock
+        bind "Ctrl G" { SwitchToMode "Locked"; }
+
+        // Floating panes
+        bind "Ctrl Shift F" { ToggleFloatingPanes; }
+
+        // Move focused pane between tabs
+        bind "Ctrl Shift {" { MoveTab "Left"; }
+        bind "Ctrl Shift }" { MoveTab "Right"; }
+    }
+
+    resize {
+        bind "Ctrl Shift R" { SwitchToMode "Normal"; }
+        bind "Esc"           { SwitchToMode "Normal"; }
+        bind "h" "Left"      { Resize "Increase Left"; }
+        bind "j" "Down"      { Resize "Increase Down"; }
+        bind "k" "Up"        { Resize "Increase Up"; }
+        bind "l" "Right"     { Resize "Increase Right"; }
+        bind "H"             { Resize "Decrease Left"; }
+        bind "J"             { Resize "Decrease Down"; }
+        bind "K"             { Resize "Decrease Up"; }
+        bind "L"             { Resize "Decrease Right"; }
+        bind "=" "+"         { Resize "Increase"; }
+        bind "-"             { Resize "Decrease"; }
+    }
+
+    scroll {
+        bind "Esc"           { SwitchToMode "Normal"; }
+        bind "Ctrl Shift PageUp" { SwitchToMode "Normal"; }
+        bind "e"             { EditScrollback; SwitchToMode "Normal"; }
+        bind "j" "Down"      { ScrollDown; }
+        bind "k" "Up"        { ScrollUp; }
+        bind "Ctrl f" "PageDown" { PageScrollDown; }
+        bind "Ctrl b" "PageUp"   { PageScrollUp; }
+        bind "d"             { HalfPageScrollDown; }
+        bind "u"             { HalfPageScrollUp; }
+        bind "/"             { SwitchToMode "EnterSearch"; SearchInput 0; }
+    }
+
+    search {
+        bind "Esc"      { SwitchToMode "Normal"; }
+        bind "n"        { Search "down"; }
+        bind "p"        { Search "up"; }
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up"   { ScrollUp; }
+    }
+
+    entersearch {
+        bind "Esc" { SwitchToMode "Scroll"; }
+        bind "Enter" { SwitchToMode "Search"; }
+    }
+
+    session {
+        bind "Esc"           { SwitchToMode "Normal"; }
+        bind "Ctrl Shift S"  { SwitchToMode "Normal"; }
+        bind "d" { Detach; }
+        bind "w" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            }
+            SwitchToMode "Normal"
+        }
+    }
+
+    locked {
+        bind "Ctrl G" { SwitchToMode "Normal"; }
+    }
+
+    shared_except "locked" "normal" {
+        // Allow returning to normal from any mode with Escape (already handled above)
+    }
+}

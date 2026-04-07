@@ -1,0 +1,12 @@
+// Fat layout: main pane top (60%), stacked panes bottom
+// Usage: zellij --layout fat
+layout {
+    pane split_direction="horizontal" {
+        pane size="60%"
+        pane split_direction="vertical" {
+            pane
+            pane
+            pane
+        }
+    }
+}

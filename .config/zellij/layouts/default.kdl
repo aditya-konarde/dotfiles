@@ -1,0 +1,65 @@
+// Default Zellij layout with Kitty-like swap layouts
+// Ctrl+Shift+L cycles between these layouts
+
+layout {
+    // Base layout: single pane
+    pane
+
+    // Tall: main pane left (60%), stacked panes right
+    swap_tiled_layout name="tall" {
+        tab max_panes=2 {
+            pane split_direction="vertical" {
+                pane size="60%"
+                pane
+            }
+        }
+        tab {
+            pane split_direction="vertical" {
+                pane size="60%"
+                pane split_direction="horizontal" {
+                    pane
+                    pane
+                }
+            }
+        }
+    }
+
+    // Fat: main pane top (60%), stacked panes bottom
+    swap_tiled_layout name="fat" {
+        tab max_panes=2 {
+            pane split_direction="horizontal" {
+                pane size="60%"
+                pane
+            }
+        }
+        tab {
+            pane split_direction="horizontal" {
+                pane size="60%"
+                pane split_direction="vertical" {
+                    pane
+                    pane
+                }
+            }
+        }
+    }
+
+    // Grid: balanced 2x2
+    swap_tiled_layout name="grid" {
+        tab max_panes=4 {
+            pane split_direction="vertical" {
+                pane
+                pane split_direction="horizontal" {
+                    pane
+                    pane
+                }
+            }
+        }
+    }
+
+    // Stack: single focused pane (fullscreen toggle)
+    swap_tiled_layout name="stack" {
+        tab {
+            pane
+        }
+    }
+}

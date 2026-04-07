@@ -1,0 +1,12 @@
+// Tall layout: main pane left (60%), stacked panes right
+// Usage: zellij --layout tall
+layout {
+    pane split_direction="vertical" {
+        pane size="60%"
+        pane split_direction="horizontal" {
+            pane
+            pane
+            pane
+        }
+    }
+}
