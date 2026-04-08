@@ -1,0 +1,23 @@
+# GNOME Keyboard Shortcuts Backup
+# Generated on 2026-04-07T20:23:46+02:00
+# Hostname: cachy
+
+# === Window Manager Keybindings ===
+[/]
+close=['<Alt>F4', '<Super>q']
+
+# === Media Keys (including custom shortcuts) ===
+[/]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal/']
+
+[custom-keybindings/terminal]
+binding='<Primary><Alt>t'
+command='kitty'
+name='Launch Terminal'
+
+# === Mutter Keybindings ===
+
+# === Mutter Wayland Keybindings ===
+
+# === GNOME Shell Keybindings ===
+

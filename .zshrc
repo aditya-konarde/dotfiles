@@ -204,3 +204,8 @@ alias ltt='eza --tree --level=3'             # Tree view, 3 levels deep
 alias lg='eza -l --git'                      # Show git status in list
 alias lm='eza -l --sort=modified'            # Sort by modified date
 alias lz='eza -l --sort=size'                # Sort by size
+
+# Auto-start Zellij if available and not already inside a session
+if command -v zellij &>/dev/null && [ -z "$ZELLIJ" ] && [[ $- == *i* ]]; then
+    exec zellij
+fi
