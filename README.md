@@ -60,4 +60,4 @@ Feel free to fork this repository and modify any of the files to match your pref
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the GPL-3.0 License - see the LICENSE file for details.

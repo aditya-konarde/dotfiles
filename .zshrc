@@ -91,7 +91,7 @@ alias k='kubectl'
 alias tf='terraform'
 
 # Docker aliases
-alias d='docker'
+alias dk='docker'
 alias dc='docker-compose'
 alias dps='docker ps'
 alias di='docker images'
@@ -152,7 +152,7 @@ cheatsheet() {
     echo "• lz → Sort by size"
     
     echo "\n\033[1;32m🐳 Docker Shortcuts\033[0m"
-    echo "• d → docker"
+    echo "• dk → docker"
     echo "• dc → docker-compose"
     echo "• dps → docker ps"
     echo "• di → docker images"
@@ -206,6 +206,6 @@ alias lm='eza -l --sort=modified'            # Sort by modified date
 alias lz='eza -l --sort=size'                # Sort by size
 
 # Auto-start Zellij if available and not already inside a session
-if command -v zellij &>/dev/null && [ -z "$ZELLIJ" ] && [[ $- == *i* ]]; then
+if command -v zellij &>/dev/null && [ -z "$ZELLIJ" ] && [[ $- == *i* ]] && [ -z "$VSCODE_IPC_HOOK_CLI" ] && [ "$TERM_PROGRAM" != "vscode" ] && [ -z "$SSH_TTY" ]; then
     exec zellij
 fi

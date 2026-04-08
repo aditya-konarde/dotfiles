@@ -52,6 +52,7 @@ brew "vips"         # Image processing
 brew "webp"         # Image format
 
 # Security Tools
+brew "gitleaks"     # Detect hardcoded secrets
 brew "gnupg"        # OpenPGP implementation
 brew "openssl@3"    # SSL/TLS toolkit
 brew "pinentry"     # PIN entry dialog
@@ -65,6 +66,7 @@ cask "headlamp"     # Kubernetes UI
 cask "latest"       # Software update checker
 cask "ollamac"      # Local LLM runner
 cask "alacritty"     # GPU-accelerated terminal emulator
+cask "kitty"         # Fast, feature-rich, GPU based terminal
 cask "iterm2"       # Terminal emulator
 cask "visual-studio-code"  # Code editor
 cask "docker"       # Containerization 

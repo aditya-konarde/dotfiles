@@ -20,14 +20,11 @@ error() {
     echo -e "${RED}==>${NC} $1"
 }
 
-# Check if running on macOS
-if [[ "$(uname)" != "Darwin" ]]; then
-    error "This script is designed for macOS only"
-    exit 1
-fi
+# Check OS
+OS="$(uname)"
 
-# Install Xcode Command Line Tools if not installed
-if ! xcode-select -p &>/dev/null; then
+# Install Xcode Command Line Tools if not installed (macOS only)
+if [[ "$OS" == "Darwin" ]] && ! xcode-select -p &>/dev/null; then
     log "Installing Xcode Command Line Tools..."
     xcode-select --install
     success "Xcode Command Line Tools installed"
@@ -74,11 +71,24 @@ backup_and_link() {
 # Symlink configuration files
 log "Creating symlinks..."
 backup_and_link "$PWD/.zshrc" "$HOME/.zshrc"
-backup_and_link "$PWD/.config" "$HOME/.config"
 
-# Apply macOS settings
-log "Applying macOS settings..."
-source ./macos.sh
+# Symlink individual config directories instead of the whole ~/.config
+for item in "$PWD/.config"/*; do
+    if [ -e "$item" ]; then
+        item_name=$(basename "$item")
+        backup_and_link "$item" "$HOME/.config/$item_name"
+    fi
+done
+
+# Configure git to use our hooks
+log "Configuring git hooks..."
+git config --global core.hooksPath "$HOME/.config/git-hooks"
+
+# Apply macOS settings (macOS only)
+if [[ "$OS" == "Darwin" ]]; then
+    log "Applying macOS settings..."
+    source ./macos.sh
+fi
 
 success "Installation complete! Please restart your computer for all changes to take effect."
 echo "Your old configuration files have been backed up to: $backup_dir" 
