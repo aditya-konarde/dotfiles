@@ -26,9 +26,10 @@ This repository follows these security practices:
 ### Excluded from Version Control
 
 The following are excluded via `.gitignore`:
+
 - SSH private keys (`id_rsa`, `id_ed25519`, etc.)
 - GPG private keys
-- Environment files (`.env`, `.env.*`)
+- Environment files (`.env`, `.env.`*)
 - Shell history files
 - API keys and tokens
 - Cloud provider credentials
@@ -37,6 +38,7 @@ The following are excluded via `.gitignore`:
 ### What IS Tracked
 
 Only configuration files that do not contain secrets:
+
 - Shell configuration (`.zshrc`)
 - Application preferences
 - Setup scripts
@@ -46,10 +48,10 @@ Only configuration files that do not contain secrets:
 
 If you fork or contribute to this repository:
 
-- [ ] Never commit secrets, tokens, or passwords
-- [ ] Use environment variables for sensitive configuration
-- [ ] Review changes before committing
-- [ ] Keep local copies of sensitive files outside the repo
+- Never commit secrets, tokens, or passwords
+- Use environment variables for sensitive configuration
+- Review changes before committing
+- Keep local copies of sensitive files outside the repo
 
 ## Acknowledgments
 

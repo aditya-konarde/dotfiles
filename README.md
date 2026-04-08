@@ -18,17 +18,17 @@ A collection of dotfiles and scripts for setting up a macOS development environm
 ## Installation
 
 1. Clone this repository:
-   ```bash
+  ```bash
    git clone https://github.com/yourusername/dotfiles.git
    cd dotfiles
-   ```
-
+  ```
 2. Run the installation script:
-   ```bash
+  ```bash
    ./install.sh
-   ```
+  ```
 
 The installation script will:
+
 - Install Xcode Command Line Tools if not present
 - Install Homebrew if not present
 - Install all packages from the Brewfile
@@ -47,6 +47,7 @@ The installation script will:
 ## Post-Installation
 
 After installation:
+
 1. Restart your computer to apply all settings
 2. Open iTerm2 (it will be installed via Homebrew)
 3. Your old configuration files will be backed up in `~/.dotfiles_backup_[timestamp]`
@@ -54,6 +55,7 @@ After installation:
 ## Customization
 
 Feel free to fork this repository and modify any of the files to match your preferences:
+
 - Edit the `Brewfile` to add/remove packages
 - Modify `macos.sh` to change system preferences
 - Update `.zshrc` for shell customization
