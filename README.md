@@ -27,6 +27,12 @@ Hyprland builds that only support `hyprland.conf` cannot use this Lua profile.
 
 ## Install on Linux
 
+For agent-assisted setup, follow [AGENTS.md](AGENTS.md). For example, ask your
+agent: "Set up this repository on this Linux machine, including required packages
+and desktop-session verification." The workflow requires checking dependencies,
+following up on packages that need your action, configuring the session, and
+reporting any pending login checks. The shell installer itself only copies files.
+
 Install dependencies separately. The desktop uses Hyprland, Noctalia, UWSM,
 Kitty, Dolphin, Brave Origin, GNOME Text Editor/Calculator, Satty, hyprpicker,
 PipeWire/PulseAudio tools (`pactl`), `socat`, Python 3, and `notify-send`. Install
