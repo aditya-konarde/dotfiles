@@ -1,0 +1,119 @@
+#!/usr/bin/python3
+"""Retry failed monitor modesets after locked hotplug; preserve authentication."""
+import fcntl
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+
+def run(*args):
+    result = subprocess.run(args, capture_output=True, text=True, timeout=5)
+    if result.returncode:
+        raise RuntimeError(f"{args[0]}: {result.stderr.strip() or result.stdout.strip()}")
+    return result.stdout.strip()
+
+
+log_dir = Path.home() / ".local/state/hypr-lock-display"
+log_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+
+
+def log(event, **fields):
+    with (log_dir / "recovery.jsonl").open("a") as stream:
+        stream.write(json.dumps({"time": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                                 "event": event, **fields}) + "\n")
+
+
+def snapshot():
+    state = {"locked": json.loads(run("hyprctl", "-j", "locked")),
+             "monitors": json.loads(run("hyprctl", "-j", "monitors", "all"))}
+    try:
+        state["noctalia"] = json.loads(run("noctalia", "msg", "status"))
+    except Exception as error:
+        state["noctalia"] = {"error": str(error)}
+    return state
+
+
+def power(name, action):
+    # JSON strings are valid Lua string literals for these connector names.
+    code = "hl.dispatch(hl.dsp.dpms({action=" + json.dumps(action) + ",monitor=" + json.dumps(name) + "}))"
+    result = run("hyprctl", "eval", code)
+    log("dpms", monitor=name, action=action, result=result)
+    if "error" in result.lower():
+        raise RuntimeError(result)
+
+
+def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else "--manual"
+    if mode == "--status":
+        state = snapshot()
+        log("status", **state)
+        print(json.dumps(state, indent=2))
+        return
+    if mode not in ("--manual", "--hotplug"):
+        raise ValueError("usage: hypr-lock-display-recover [--manual|--hotplug|--status]")
+    runtime = Path(os.environ["XDG_RUNTIME_DIR"])
+    with (runtime / "hypr-lock-display-recover.lock").open("w") as guard:
+        try:
+            fcntl.flock(guard, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return
+        if mode == "--hotplug":
+            time.sleep(2)  # Allow link training and lock-surface creation to settle.
+        state = snapshot()
+        log("before", mode=mode, **state)
+        if mode == "--hotplug" and not state["locked"].get("locked", False):
+            log("skipped-unlocked")
+            return
+        names = [m["name"] for m in state["monitors"]
+                 if not m.get("disabled") and m["name"].startswith(("DP-", "HDMI-", "eDP-"))]
+        if not names:
+            log("no-physical-output")
+            return
+        stamp = runtime / "hypr-lock-display-recover.last"
+        if mode == "--hotplug" and stamp.exists() and time.time() - stamp.stat().st_mtime < 15:
+            log("skipped-cooldown")
+            return
+        stamp.touch()
+        # The recorded failure was DPMS-on but 0x0: no mode was installed.
+        # A config reload skips an unchanged monitor rule; DPMS alone cannot
+        # repair it. This dispatcher explicitly reapplies the configured modes.
+        # Never restart the locker or release the session lock here.
+        for attempt, delay in enumerate((0, 2, 4), start=1):
+            time.sleep(delay)
+            current = snapshot()
+            physical = [m for m in current["monitors"] if not m.get("disabled")
+                        and m["name"].startswith(("DP-", "HDMI-", "eDP-"))]
+            if not physical:
+                log("disconnected-during-recovery")
+                return
+            if mode == "--hotplug" and not current["locked"].get("locked", False):
+                log("skipped-unlocked")
+                return
+            invalid = [m["name"] for m in physical if m["width"] <= 0 or m["height"] <= 0]
+            if invalid or (mode == "--manual" and attempt == 1):
+                result = run("hyprctl", "eval", "hl.dispatch(hl.dsp.force_renderer_reload())")
+                log("modeset-retry", attempt=attempt, invalid=invalid, result=result)
+                if "error" in result.lower():
+                    raise RuntimeError(result)
+            for monitor in physical:
+                power(monitor["name"], "on")
+            if not invalid:
+                break
+        time.sleep(1)
+        after = snapshot()
+        log("after", **after)
+        if any(not m.get("disabled") and m["name"].startswith(("DP-", "HDMI-", "eDP-"))
+               and (m["width"] <= 0 or m["height"] <= 0) for m in after["monitors"]):
+            raise RuntimeError("monitor still has no valid mode after bounded retries")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as error:
+        log("error", detail=str(error))
+        print(error, file=sys.stderr)
+        sys.exit(1)

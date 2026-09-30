@@ -37,6 +37,17 @@ fi
 # Run gitleaks on staged changes
 echo "Running gitleaks secret scan..."
 
+# This public dotfiles repository also excludes personal identifiers. Read the
+# exact index, so unstaged cleanup cannot hide a private value being committed.
+repo_root=$(git rev-parse --show-toplevel) || exit 1
+if [ -f "$repo_root/scripts/check-public-configs.py" ]; then
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "ERROR: python3 is required for the dotfiles privacy check."
+        exit 1
+    fi
+    python3 "$repo_root/scripts/check-public-configs.py" --staged || exit 1
+fi
+
 # Use protect mode to scan staged changes
 "$GITLEAKS" protect --staged --verbose --redact
 

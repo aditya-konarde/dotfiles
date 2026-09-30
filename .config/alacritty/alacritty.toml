@@ -1,4 +1,27 @@
-# Font
+[general]
+import = ["~/.config/alacritty/themes/noctalia.toml"]
+
+# Alacritty Configuration
+# See: https://alacritty.org/config-alacritty.html
+
+[env]
+TERM = "xterm-256color"
+
+[terminal.shell]
+program = "zellij"
+
+[window]
+padding = { x = 8, y = 6 }
+dynamic_padding = true
+decorations = "None"
+startup_mode = "Maximized"
+option_as_alt = "Both"
+opacity = 0.88
+
+[scrolling]
+history = 50000
+multiplier = 3
+
 [font]
 size = 12.0
 
@@ -18,69 +41,84 @@ style = "Italic"
 family = "MesloLGS Nerd Font"
 style = "Bold Italic"
 
-# Cursor
+[colors]
+transparent_background_colors = true
+
+# Tokyo Night theme
+[colors.primary]
+background = "#1a1b26"
+foreground = "#a9b1d6"
+
+[colors.normal]
+black = "#32344a"
+red = "#f7768e"
+green = "#9ece6a"
+yellow = "#e0af68"
+blue = "#7aa2f7"
+magenta = "#ad8ee6"
+cyan = "#449dab"
+white = "#787c99"
+
+[colors.bright]
+black = "#444b6a"
+red = "#ff7a93"
+green = "#b9f27c"
+yellow = "#ff9e64"
+blue = "#7da6ff"
+magenta = "#bb9af7"
+cyan = "#0db9d7"
+white = "#acb0d0"
+
+[colors.selection]
+background = "#33467c"
+foreground = "#c0caf5"
+
+[colors.cursor]
+cursor = "#c0caf5"
+text = "#1a1b26"
+
+[colors.vi_mode_cursor]
+cursor = "#c0caf5"
+text = "#1a1b26"
+
+[colors.search.matches]
+background = "#33467c"
+foreground = "#c0caf5"
+
+[colors.search.focused_match]
+background = "#9ece6a"
+foreground = "#1a1b26"
+
+[colors.hints.start]
+background = "#e0af68"
+foreground = "#1a1b26"
+
+[colors.hints.end]
+background = "#1a1b26"
+foreground = "#e0af68"
+
+[colors.line_indicator]
+background = "None"
+foreground = "None"
+
+[colors.footer_bar]
+background = "#1a1b26"
+foreground = "#a9b1d6"
+
 [cursor]
-style = { shape = "Beam", blinking = "On" }
-thickness = 0.15
-blink_interval = 750
+style = { shape = "Block", blinking = "On" }
+vi_mode_style = { shape = "Block", blinking = "Off" }
+blink_timeout = 0
 unfocused_hollow = true
 
-# Scrolling
-[scrolling]
-history = 10000
+[mouse]
+hide_when_typing = true
 
-# Window
-[window]
-padding = { x = 8, y = 8 }
-decorations = "None"
-opacity = 0.92
-dynamic_title = true
-
-[window.class]
-instance = "Alacritty"
-general = "Alacritty"
-
-# Bell
-[bell]
-duration = 0
-
-# Mouse
 [selection]
 save_to_clipboard = true
 
-# ── Catppuccin Mocha theme ──
-[colors.primary]
-foreground = "#CDD6F4"
-background = "#1E1E2E"
+[bell]
+duration = 0
 
-[colors.cursor]
-text = "#1E1E2E"
-cursor = "#F5E0DC"
-
-[colors.selection]
-text = "#1E1E2E"
-background = "#F5E0DC"
-
-[colors.normal]
-black   = "#45475A"
-red     = "#F38BA8"
-green   = "#A6E3A1"
-yellow  = "#F9E2AF"
-blue    = "#89B4FA"
-magenta = "#F5C2E7"
-cyan    = "#94E2D5"
-white   = "#BAC2DE"
-
-[colors.bright]
-black   = "#585B70"
-red     = "#F38BA8"
-green   = "#A6E3A1"
-yellow  = "#F9E2AF"
-blue    = "#89B4FA"
-magenta = "#F5C2E7"
-cyan    = "#94E2D5"
-white   = "#A6ADC8"
-
-# Environment
-[env]
-TERM = "xterm-256color"
+[debug]
+log_level = "Warn"

@@ -1,0 +1,4 @@
+# Default two-pane layout: panes side by side with a vertical divider.
+layout splits
+launch
+launch --location=vsplit

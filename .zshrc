@@ -1,211 +1,163 @@
-#!/bin/zsh
+# Keep the macOS shell profile while using the current CachyOS profile on Linux.
+if [[ "$OSTYPE" == darwin* ]]; then
+  [[ -r "$HOME/.config/zsh/macos.zshrc" ]] && source "$HOME/.config/zsh/macos.zshrc"
+  return
+fi
 
-# Performance optimization
-zmodload zsh/zprof  # Uncomment to profile shell startup time
-setopt NO_BEEP
-setopt NO_HIST_BEEP
+# CachyOS initializes Oh My Zsh, Powerlevel10k, and the instant prompt.
+[[ -r /usr/share/cachyos-zsh-config/cachyos-config.zsh ]] &&
+  source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 
-# History configuration
-HISTSIZE=50000
-SAVEHIST=50000
-HISTFILE=~/.zsh_history
-setopt EXTENDED_HISTORY       # Write timestamps to history
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS      # Don't record duplicates
-setopt HIST_IGNORE_SPACE     # Don't record commands starting with space
-setopt HIST_VERIFY
-setopt SHARE_HISTORY         # Share history between sessions
-setopt APPEND_HISTORY        # Don't overwrite history
+# Disable command auto-correction (the "correct 'x' to 'y' [nyae]?" prompts).
+# CachyOS's config enables it via ENABLE_CORRECTION; turn it back off here so
+# it survives updates to the system config.
+unsetopt correct correct_all
 
-# Directory navigation
-setopt AUTO_CD              # Just type directory name to cd
-setopt AUTO_PUSHD          # Push directories to stack
-setopt PUSHD_IGNORE_DUPS
-setopt PUSHD_SILENT
+# Homebrew also configures MANPATH and INFOPATH, so initialize it before
+# defining the preferred order of user-local executable directories.
+if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+fi
 
-# Completion system
-autoload -Uz compinit
-compinit -d ~/.cache/zcompdump
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case insensitive completion
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:descriptions' format '%F{green}-- %d --%f'
+# Keep PATH entries unique and declare their precedence in one place.
+typeset -U path PATH
+path=(
+  "$HOME/.local/bin"
+  "$HOME/.docker/sbx/bin"
+  "$HOME/.npm-global/bin"
+  "$HOME/.cargo/bin"
+  "$HOME/.railway/bin"
+  "$HOME/.bun/bin"
+  $path
+)
 
-# Key bindings
-bindkey -e  # Use emacs key bindings
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
+# CachyOS's config enables zsh spelling correction, which is useful for commands
+# but noisy for hostnames, URLs, and remote paths. Exempt network commands only.
+for _nc in ssh scp sftp sshfs rsync mosh ssh-add ssh-copy-id ssh-keygen ssh-keyscan curl wget; do
+  alias "$_nc"="nocorrect $_nc"
+done
+unset _nc
 
-# Colors and prompt
-autoload -U colors && colors
-export CLICOLOR=1
-export LSCOLORS=ExFxCxDxBxegedabagacad
+# Prefer the installed GSD CLI over the git plugin's `gsd='git svn dcommit'` alias.
+unalias gsd 2>/dev/null || true
 
-# Modern prompt with git information
-autoload -Uz vcs_info
-precmd() { vcs_info }
-zstyle ':vcs_info:git:*' formats '%F{240}(%b)%f'
-setopt PROMPT_SUBST
-PROMPT='%F{green}%n@%m%f:%F{blue}%~%f ${vcs_info_msg_0_} %# '
-
-# Modern CLI tool replacements
-alias cat='bat --style=plain'                # bat instead of cat
-alias ls='eza --group-directories-first'     # eza instead of ls
-alias ll='eza -l --group-directories-first'  # detailed list
-alias la='eza -la --group-directories-first' # include hidden files
-alias tree='eza --tree'                      # tree view
-alias find='fd'                              # fd instead of find
-alias grep='rg'                              # ripgrep instead of grep
-alias diff='colordiff'                       # colored diff output
-
-# Directory navigation
-alias ..='cd ..'
-alias ...='cd ../..'
-alias mkdir='mkdir -p'
-alias df='df -h'
-alias du='du -h'
-
-# Git aliases and improvements
-alias g='git'
-alias ga='git add'
-alias gc='git commit'
-alias gco='git checkout'
-alias gst='git status'
-alias gl='git log --oneline'
-alias gp='git push'
-alias gpl='git pull'
-alias gd='git diff'
-alias gb='git branch'
-alias gf='git fetch'
-
-# Development tools
-alias py='python3'
-alias pip='pip3'
-alias node='node'
-alias npm='npm'
-alias k='kubectl'
-alias tf='terraform'
-
-# Docker aliases
-alias dk='docker'
-alias dc='docker-compose'
-alias dps='docker ps'
-alias di='docker images'
-alias dex='docker exec -it'
-alias dlog='docker logs'
-
-# fzf configuration
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Extract any archive
-extract() {
-    if [ -f $1 ]; then
-        case $1 in
-            *.tar.bz2)   tar xjf $1     ;;
-            *.tar.gz)    tar xzf $1     ;;
-            *.bz2)       bunzip2 $1     ;;
-            *.rar)       unrar e $1     ;;
-            *.gz)        gunzip $1      ;;
-            *.tar)       tar xf $1      ;;
-            *.tbz2)      tar xjf $1     ;;
-            *.tgz)       tar xzf $1     ;;
-            *.zip)       unzip $1       ;;
-            *.Z)         uncompress $1  ;;
-            *.7z)        7z x $1        ;;
-            *)          echo "'$1' cannot be extracted" ;;
-        esac
+# Mount APFS drive easily
+mount-mac() {
+    local drive=$(lsblk -p -n -l -o NAME,FSTYPE | grep -i apfs | awk '{print $1}' | head -n 1)
+    if [ -z "$drive" ]; then
+        echo "No APFS drive detected."
+        return 1
+    fi
+    local mount_point="/run/media/$USER/MacDrive"
+    echo "Found APFS drive at $drive. Mounting to $mount_point..."
+    sudo mkdir -p "$mount_point"
+    sudo chown "$USER:$USER" "$mount_point"
+    sudo apfs-fuse -o allow_other "$drive" "$mount_point"
+    if [ $? -eq 0 ]; then
+        echo "Successfully mounted! You can now access it in GNOME Files or at $mount_point"
     else
-        echo "'$1' is not a valid file"
+        echo "Failed to mount the drive."
     fi
 }
 
-# Quick directory switching
-alias d='dirs -v'
-for index ({1..9}) alias "$index"="cd +${index}"; unset index
-
-# Enhanced cheatsheet with new tools
-cheatsheet() {
-    echo "\n\033[1;34m=== 🚀 ZSH Cheatsheet ===\033[0m\n"
-    
-    echo "\033[1;32m📂 Modern CLI Tools\033[0m"
-    echo "• bat → Enhanced cat with syntax highlighting"
-    echo "• fd → Modern alternative to find"
-    echo "• rg → Ultra-fast grep alternative"
-    echo "• eza → Modern ls replacement with git integration"
-    echo "• fzf → Fuzzy finder (Ctrl+R for history, Ctrl+T for files)"
-    
-    echo "\n\033[1;32m📂 Directory Listing (eza)\033[0m"
-    echo "• ls → Basic listing with directories first"
-    echo "• ll → Detailed list view"
-    echo "• la → Show hidden files"
-    echo "• lt → Tree view (2 levels)"
-    echo "• ltt → Tree view (3 levels)"
-    echo "• lg → List with git status"
-    echo "• lm → Sort by modified date"
-    echo "• lz → Sort by size"
-    
-    echo "\n\033[1;32m🐳 Docker Shortcuts\033[0m"
-    echo "• dk → docker"
-    echo "• dc → docker-compose"
-    echo "• dps → docker ps"
-    echo "• di → docker images"
-    echo "• dex → docker exec -it"
-    echo "• dlog → docker logs"
-    
-    echo "\n\033[1;32m🔧 Git Shortcuts\033[0m"
-    echo "• gst → git status"
-    echo "• ga → git add"
-    echo "• gc → git commit"
-    echo "• gp → git push"
-    echo "• gd → git diff"
-    echo "• gb → git branch"
-    echo "• gl → git log (oneline)"
-    
-    echo "\n\033[1;32m⚡️ Development Tools\033[0m"
-    echo "• py → python3"
-    echo "• pip → pip3"
-    echo "• k → kubectl"
-    echo "• tf → terraform"
-    
-    echo "\n\033[1;32m📦 Archive Extraction\033[0m"
-    echo "• extract any-archive.* → auto-extract any archive"
-    echo "  Supports: tar.gz, zip, rar, 7z, and more"
-    
-    echo "\n\033[1;32m⌨️  Key Bindings\033[0m"
-    echo "• Ctrl+R → fuzzy search history (with fzf)"
-    echo "• Ctrl+T → fuzzy find files (with fzf)"
-    echo "• Alt+C → fuzzy change directory (with fzf)"
-    echo "• Ctrl+Left/Right → move between words"
-    echo "• Ctrl+K → delete to end of line"
-    echo "• Ctrl+U → delete entire line"
-    
-    echo "\n\033[1;32m💡 Tips\033[0m"
-    echo "• Use bat for syntax-highlighted file viewing"
-    echo "• rg is faster than grep for code searching"
-    echo "• fd respects .gitignore by default"
-    echo "• eza's git integration shows file status in listings"
-    echo "• fzf works in many commands (kill, ssh, etc.)"
-    echo ""
+unmount-mac() {
+    local mount_point="/run/media/$USER/MacDrive"
+    echo "Unmounting $mount_point..."
+    sudo umount "$mount_point"
+    if [ $? -eq 0 ]; then
+        echo "Successfully unmounted."
+    else
+        echo "Failed to unmount. Ensure no applications are using the drive."
+    fi
 }
 
-# Load local customizations if they exist
-[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+# Bun
+export BUN_INSTALL="$HOME/.bun"
+[[ -r "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
 
-# Add some useful eza aliases
-alias lt='eza --tree --level=2'              # Tree view, 2 levels deep
-alias ltt='eza --tree --level=3'             # Tree view, 3 levels deep
-alias lg='eza -l --git'                      # Show git status in list
-alias lm='eza -l --sort=modified'            # Sort by modified date
-alias lz='eza -l --sort=size'                # Sort by size
+# Secret helpers (GNOME Keyring)
+create-secret() {
+    if (( $# != 1 )); then
+        echo "Usage: create-secret <name>" >&2
+        return 2
+    fi
+    if ! command -v secret-tool >/dev/null 2>&1; then
+        echo "secret-tool not found" >&2
+        return 127
+    fi
 
-# Auto-start Zellij if available and not already inside a session
-if command -v zellij &>/dev/null && [ -z "$ZELLIJ" ] && [[ $- == *i* ]] && [ -z "$VSCODE_IPC_HOOK_CLI" ] && [ "$TERM_PROGRAM" != "vscode" ] && [ -z "$SSH_TTY" ]; then
-    exec zellij
+    local name="$1"
+    local value
+
+    if [[ -t 0 ]]; then
+        read -rs "value?Secret value for '$name': "
+        echo
+    else
+        IFS= read -r value || [[ -n "$value" ]]
+    fi
+
+    if [[ -z "$value" ]]; then
+        echo "Secret value cannot be empty" >&2
+        return 2
+    fi
+
+    printf '%s' "$value" | command secret-tool store --label="$name" service secrets key "$name"
+    local status=$?
+    value=''
+
+    if (( status == 0 )); then
+        echo "Stored secret '$name'"
+    fi
+    return $status
+}
+
+read-secret() {
+    if [ $# -ne 1 ]; then
+        echo "Usage: read-secret <name>" >&2
+        return 2
+    fi
+    if ! command -v secret-tool >/dev/null 2>&1; then
+        echo "secret-tool not found" >&2
+        return 127
+    fi
+
+    command secret-tool lookup service secrets key "$1"
+}
+
+# Auto-Warpify
+if [[ -o interactive && "${TERM_PROGRAM:-}" == WarpTerminal ]]; then
+    printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh", "uname": "Linux" }}\x9c'
 fi
+
+# >>> railway initialize >>>
+[[ -r "$HOME/.railway/env" ]] && source "$HOME/.railway/env"
+# <<< railway initialize <<<
+
+# Terminal & Editor defaults
+export TERMINAL="kitty"
+export EDITOR="zed --wait"
+export VISUAL="zed --wait"
+
+# Aliases for modern Rust CLI tools
+if command -v eza >/dev/null 2>&1; then
+  alias ls="eza --icons"
+  alias ll="eza -lh --icons --git"
+  alias la="eza -lah --icons --git"
+  alias tree="eza --tree --icons"
+fi
+
+if command -v bat >/dev/null 2>&1; then
+  alias cat="bat --paging=never"
+fi
+
+if command -v bottom >/dev/null 2>&1; then
+  alias top="btm"
+fi
+
+# Starship Prompt
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+# Credentials, remote hosts, and machine-specific aliases stay in this local file.
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

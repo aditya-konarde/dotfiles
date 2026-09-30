@@ -16,6 +16,8 @@ brew "tree"         # Directory listing
 brew "wget"         # File downloader
 brew "xz"           # Compression utility
 brew "zstd"         # Fast compression
+brew "zellij"       # Default Alacritty shell and terminal layouts
+brew "gitleaks"     # Credential checks before commits
 
 # Version Control
 brew "git"          # Version control
@@ -52,7 +54,6 @@ brew "vips"         # Image processing
 brew "webp"         # Image format
 
 # Security Tools
-brew "gitleaks"     # Detect hardcoded secrets
 brew "gnupg"        # OpenPGP implementation
 brew "openssl@3"    # SSL/TLS toolkit
 brew "pinentry"     # PIN entry dialog
@@ -69,4 +70,4 @@ cask "alacritty"     # GPU-accelerated terminal emulator
 cask "kitty"         # Fast, feature-rich, GPU based terminal
 cask "iterm2"       # Terminal emulator
 cask "visual-studio-code"  # Code editor
-cask "docker"       # Containerization 
+cask "docker"       # Containerization

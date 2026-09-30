@@ -1,0 +1,14 @@
+# Public files only; do not symlink the entire live .config directory.
+.zshrc
+.config/zsh/macos.zshrc
+.config/alacritty/alacritty.toml
+.config/alacritty/themes/noctalia.toml
+.config/kitty/kitty.conf
+.config/kitty/startup.session
+.config/kitty/themes/noctalia.conf
+.config/zellij/config.kdl
+.config/zellij/layouts/default.kdl
+.config/zellij/layouts/fat.kdl
+.config/zellij/layouts/grid.kdl
+.config/zellij/layouts/tall.kdl
+.config/zellij/themes/catppuccin-mocha.kdl

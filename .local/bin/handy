@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+shopt -s nullglob
+candidates=(
+  "$HOME"/Applications/Handy*.AppImage
+  "$HOME"/Applications/handy*.AppImage
+)
+
+if (( ${#candidates[@]} == 0 )); then
+  printf 'handy: no Handy AppImage found in %s/Applications\n' "$HOME" >&2
+  exit 127
+fi
+
+latest=$(printf '%s\n' "${candidates[@]}" | sort -V | tail -n 1)
+exec "$latest" "$@"

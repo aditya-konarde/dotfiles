@@ -33,6 +33,13 @@ api_key*
 auth.json
 oauth.json
 credentials.json
+credentials
+credentials.toml
+credentials.yaml
+credentials.yml
+.git-credentials
+.netrc
+.pypirc
 secrets.yaml
 secrets.yml
 secrets.json
@@ -41,6 +48,7 @@ secrets.json
 .aws/credentials
 .azure/
 .gcloud/
+.config/gcloud/
 gcloud-service-key.json
 
 # =============================================================================
@@ -142,3 +150,59 @@ config.local.*
 
 # Fish shell variables (may contain secrets via universal vars)
 .config/fish/fish_variables
+
+# Identity, account state, and desktop/runtime data are private.
+.gitconfig
+.config/git/
+.ssh/
+.gnupg/
+.aws/
+.cache/
+.local/state/
+.config/rclone/
+.config/goa-1.0/
+.config/pulse/
+.config/noctalia/state*
+.config/noctalia/plugins.json
+.config/noctalia/plugins.toml
+.config/BraveSoftware/
+.config/chromium/
+.config/mozilla/
+.config/google-chrome*/
+.local/share/keyrings/
+
+# Backups and captures from desktop troubleshooting.
+*.bak-*
+*.before-*
+*.before.*
+*.old
+.dotfiles_backup_*/
+diagnostics/
+*.jsonl
+__pycache__/
+*.pyc
+
+# Public helpers/plugins only; the rest of .local stays private.
+!/.local/
+/.local/**
+!/.local/bin/
+!/.local/share/
+!/.local/share/applications/
+!/.local/share/noctalia/
+!/.local/share/noctalia/plugins/
+!/.local/share/noctalia/plugins/audio-output-cycle/
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/translations/
+!/.local/bin/cycle-audio-output
+!/.local/bin/handy
+!/.local/bin/hypr-lock-display-recover
+!/.local/share/applications/chatgpt.desktop
+!/.local/share/applications/kitty-open.desktop
+!/.local/share/applications/kitty.desktop
+!/.local/share/noctalia/plugins/audio-output-cycle/plugin.toml
+!/.local/share/noctalia/plugins/audio-output-cycle/shortcut.luau
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/README.md
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/plugin.toml
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/service.luau
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/translations/en.json
+!/.local/share/noctalia/plugins/scratch-workspace-indicator/widget.luau

@@ -1,0 +1,61 @@
+#!/usr/bin/python3
+"""Cycle currently exposed audio sinks and move existing playback with them."""
+import fcntl
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+
+def pactl(*args):
+    return subprocess.run(
+        ["pactl", *args], check=True, text=True, capture_output=True, timeout=5
+    ).stdout.strip()
+
+
+def notify(message):
+    subprocess.run(
+        ["notify-send", "-a", "Audio output", "-i", "audio-speakers",
+         "-h", "string:x-canonical-private-synchronous:audio-output",
+         "-t", "2500", "Audio output", message],
+        check=False, timeout=5,
+    )
+
+
+def cycle():
+    sinks = sorted(json.loads(pactl("-f", "json", "list", "sinks")),
+                   key=lambda sink: sink["name"])
+    if not sinks:
+        notify("No audio outputs available")
+        return
+    current = pactl("get-default-sink")
+    names = [sink["name"] for sink in sinks]
+    index = (names.index(current) + 1) % len(sinks) if current in names else 0
+    target = sinks[index]
+    pactl("set-default-sink", target["name"])
+    failed = 0
+    for stream in json.loads(pactl("-f", "json", "list", "sink-inputs")):
+        try:
+            pactl("move-sink-input", str(stream["index"]), target["name"])
+        except subprocess.CalledProcessError:
+            # Streams can disappear between the snapshot and the move.
+            failed += 1
+    message = target.get("description") or target["name"]
+    if len(sinks) == 1:
+        message += " (only available output)"
+    if failed:
+        message += "; some playback streams could not be moved"
+    print(message)
+    notify(message)
+
+
+if __name__ == "__main__":
+    with (Path(os.environ["XDG_RUNTIME_DIR"]) / "cycle-audio-output.lock").open("w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            cycle()
+        except (subprocess.SubprocessError, ValueError, OSError) as error:
+            print(f"Audio output switch failed: {error}", file=sys.stderr)
+            notify("Could not switch audio output")
+            sys.exit(1)

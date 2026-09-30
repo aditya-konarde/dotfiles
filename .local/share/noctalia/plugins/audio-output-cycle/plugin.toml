@@ -1,0 +1,13 @@
+id = "local/audio-output-cycle"
+name = "Audio Output Cycle"
+version = "1.0.0"
+plugin_api = 3
+author = "Dotfiles contributors"
+license = "MIT"
+icon = "switch-horizontal"
+description = "Cycle available audio outputs from the Control Center Home tab"
+dependencies = ["pactl", "python3", "notify-send"]
+
+[[shortcut]]
+id = "cycle"
+entry = "shortcut.luau"

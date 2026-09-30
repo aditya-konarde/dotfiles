@@ -1,58 +1,39 @@
-# Security Policy
+# Public configuration policy
 
-## About This Repository
+This repository contains reviewed settings and helper source. Never add account
+files, tokens, private keys, histories, device identifiers, exact location,
+private remote hosts, or application/session state. Git author metadata remains
+public when commits are published; configure your author identity separately.
 
-This is a personal dotfiles repository containing shell configurations, application settings, and system setup scripts. While this repository does not contain application code, security is still important.
+## Checks
 
-## Reporting a Vulnerability
+Gitleaks scans credentials. `scripts/check-public-configs.py` adds checks for
+personal home paths, email addresses, MAC addresses, fixed coordinates, private
+network addresses, SSH accounts/hosts, URL credentials, and common private files.
+It reports only filenames, line numbers, and categories, never matching values.
 
-If you discover a security issue (such as accidentally committed secrets, insecure configurations, or other concerns), please report it responsibly.
+Use both tools: a clean Gitleaks result alone does not establish privacy. Neither
+check can recognize every identifier or secret. Manually review new files, URLs,
+commands, and comments before publication. No broad Gitleaks allowlist is used.
 
-### How to Report
+The pre-commit hook checks index contents, including newly added files. Configure
+it with `git config core.hooksPath .config/git-hooks`; it requires Gitleaks and
+Python 3. CI also checks the current files and scans Git history for credentials.
+The installers copy explicit manifests and do not link live app directories into
+this public checkout.
 
-- **For minor issues**: Open a GitHub issue
-- **For sensitive issues** (e.g., exposed credentials): Please contact the repository owner directly via GitHub
+## Local settings and exclusions
 
-### What to Include
+Keep credentials and remote hosts in ignored `~/.zshrc.local` or
+`~/.config/fish/config.fish.local`, environment variables, or your OS keyring.
+Keep Git identities, browser profiles, cloud/SSH credentials, Noctalia plugin
+activation state, diagnostic captures, and application data outside the repo.
+`.gitignore` excludes common private paths and backup files, but already tracked
+files remain tracked even if an ignore rule matches them.
 
-- Description of the security concern
-- Location of the affected file(s)
-- Suggested remediation (if applicable)
+## Reporting
 
-## Security Best Practices
-
-This repository follows these security practices:
-
-### Excluded from Version Control
-
-The following are excluded via `.gitignore`:
-
-- SSH private keys (`id_rsa`, `id_ed25519`, etc.)
-- GPG private keys
-- Environment files (`.env`, `.env.`*)
-- Shell history files
-- API keys and tokens
-- Cloud provider credentials
-- Application secrets
-
-### What IS Tracked
-
-Only configuration files that do not contain secrets:
-
-- Shell configuration (`.zshrc`)
-- Application preferences
-- Setup scripts
-- Homebrew package lists
-
-## Security Checklist for Contributors
-
-If you fork or contribute to this repository:
-
-- Never commit secrets, tokens, or passwords
-- Use environment variables for sensitive configuration
-- Review changes before committing
-- Keep local copies of sensitive files outside the repo
-
-## Acknowledgments
-
-Security researchers and contributors who help improve this repository's security are appreciated.
+For exposed credentials or other sensitive findings, contact the repository
+owner privately via GitHub. Include the affected path and commit, but do not copy
+secret values into public issues. Ordinary configuration problems can be reported
+in a public issue.

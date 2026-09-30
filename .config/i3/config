@@ -137,8 +137,8 @@ bindsym XF86MonBrightnessDown exec "light -U 5"
 # Lock screen
 bindsym Control+$mod+l exec "i3lock -c 000000"
 
-# Connect to bluetooth headset
-bindsym $mod+Shift+b exec 'echo "connect 00:16:94:2B:BA:7A" | bluetoothctl'
+# Select a Bluetooth device interactively; device addresses stay private.
+bindsym $mod+Shift+b exec blueman-manager
 
 # Switch window/workspace with mod+scroll and mod+shift scroll
 #bindsym --whole-window --border $mod+button4 focus left
@@ -277,7 +277,7 @@ hide_edge_borders vertical
 # Startup services
 
 # Set the wallpaper
-exec_always --no-startup-id feh --bg-scale --no-xinerama /home/akonarde/Pictures/wallpaper.jpg
+exec_always --no-startup-id feh --bg-scale --no-xinerama $HOME/Pictures/wallpaper.jpg
 
 # Start the polkit agent
 exec_always --no-startup-id lxpolkit
