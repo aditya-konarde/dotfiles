@@ -6,23 +6,28 @@ Credentials, accounts, histories, private hosts, and application state stay loca
 
 ## Current Linux desktop
 
-The September 2026 snapshot includes:
+The October 2026 desktop refinement includes:
 
 - Lua Hyprland configuration: three numbered workspaces, window movement with
   `Super+Shift+1–3`, a named scratch workspace, adaptive pointer acceleration,
-  opaque windows, disabled blur, VRR, and a 4K/240 Hz monitor profile.
-- Noctalia bar and Control Center layout, bold workspace labels, startup DND,
-  screenshot annotation with Satty, and wallpaper-generated terminal themes.
+  opaque windows, click-to-focus, most-recently-used focus on close, thin focus
+  borders, disabled animations/blur, and the existing VRR/4K/240 Hz monitor profile.
+- Noctalia NeutralDark palette, a flat bar with stable workspace labels, a
+  search-first launcher, top-right Control Center, startup DND, and Satty
+  screenshot annotation. Shell, wallpaper, and lock-screen animations are disabled.
 - Local Noctalia plugins for a distinct scratch-workspace indicator and audio
   output cycling from Control Center Home. Public plugin IDs use `local/`.
 - Handy transcription shortcuts and an AppImage launcher; the microphone shortcut
   is `Ctrl+Alt+Space`. The launcher looks in `~/Applications` for Handy AppImages.
-- Kitty split layouts and mouse/link controls, Alacritty, Zellij, Starship,
+- Kitty split layouts, explicit clipboard copying, running-command close
+  confirmation, current-directory tabs, searchable scrollback, and an opaque
+  palette independent of Noctalia. Cursor blinking/trails and bell animation are
+  disabled. Also included: Alacritty, Zellij, Starship,
   Fish/Zsh, btop, MangoHud, and a Wayland ChatGPT launcher override.
 - mpv Vulkan playback with ArtCNN/CfL shaders and an optional FSRCNNX comparison.
 
 See [Hyprland keybindings](.config/hypr/KEYBINDINGS.md). The config was checked
-with Hyprland 0.56.2 (Lua `hl` API) and Noctalia 5.1.0 / plugin API 3. Older
+with Hyprland 0.56.2 (Lua `hl` API) and Noctalia 5.2.1 / plugin API 3. Older
 Hyprland builds that only support `hyprland.conf` cannot use this Lua profile.
 
 ## Install on Linux
@@ -69,6 +74,34 @@ existing private copies. Manage older copies in Noctalia Settings. The bounded
 lock/display recovery helper is retained, but its temporary diagnostic collector
 is excluded. The helper preserves the session lock and writes diagnostic output
 only under `~/.local/state/`.
+
+## Animation-free desktop and existing installations
+
+Hyprland disables animations globally, including inherited fades and color-matrix
+transitions. Noctalia disables shell animation and uses empty wallpaper/lock-screen
+transition lists; their 100 ms duration is the accepted minimum and is unused when
+no transition is selected. Kitty disables cursor blinking/trails and animated bells.
+
+For GTK applications, run this separately in the intended user's session:
+
+```sh
+gsettings set org.gnome.desktop.interface enable-animations false
+```
+
+The file installer deliberately does not change GSettings or reload the desktop.
+Apps with their own animation preferences may need separate adjustments.
+
+Noctalia UI settings in `~/.local/state/noctalia/settings.toml` can override this
+profile. On an existing installation, choose custom palette `NeutralDark`, turn
+off pure-black backgrounds and shell animation, disable wallpaper/lock transitions,
+and deselect Kitty under theme templates. Preserve unrelated runtime settings;
+do not replace that state file with a public template. Kitty's fixed palette must
+not be overridden by an automatically re-added `include themes/noctalia.conf`.
+
+Kitty uses `Ctrl+Shift+F` for scrollback (`/` to search, `q` to return),
+`Ctrl+Shift+T` for a tab in the current directory, and `Ctrl+Shift+W` for protected
+pane closing. Split rotation moved to `Ctrl+Shift+Alt+F`. Machine-local Command-key
+translations and personal launcher helpers are not copied into this public profile.
 
 ## macOS and older desktops
 

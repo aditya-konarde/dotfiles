@@ -54,7 +54,7 @@ scripts. The following groups are a starting inventory, not fixed package names:
 | Repo maintenance | Python and Gitleaks for the public-config checks and commit hook |
 
 - Check both command availability and compatibility. The reference config was
-  validated with Hyprland 0.56.2 and Noctalia 5.1.0; do not assume an older
+  validated with Hyprland 0.56.2 and Noctalia 5.2.1; do not assume an older
   `hyprland.conf`-only release supports the Lua API. Use the installed validators.
 - Resolve missing commands to packages using the target's package manager. Prefer
   official repositories. Review package availability and the actual install
@@ -161,6 +161,15 @@ substituted, skipped optional integrations, host-specific adaptations, backup an
 rollback paths, checks actually completed, and remaining user actions. Rollback
 restores only files replaced by this run from their matching backup paths; review
 newly created files separately. Do not remove unrelated packages or user data.
+
+## Desktop motion and theme policy
+
+Keep Hyprland, Noctalia shell/wallpaper/lock transitions, and Kitty cursor effects
+disabled. During an authorized setup, also apply and verify the GTK
+`org.gnome.desktop.interface enable-animations` setting as false. The copy-only
+installer does not do this. Check effective Noctalia settings for runtime overrides;
+use the supplied NeutralDark palette and exclude Kitty from automatic templates.
+Preserve unrelated local state rather than copying it into this repository.
 
 ## Repository changes and publication
 

@@ -34,6 +34,7 @@
 .config/mpv/shaders/CfL_Prediction.glsl
 .config/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl
 .config/noctalia/config.toml
+.config/noctalia/palettes/NeutralDark.json
 .config/starship.toml
 .config/xdg-terminal-exec/default.list
 .config/zellij/config.kdl

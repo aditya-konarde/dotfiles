@@ -1,31 +1,38 @@
 [accessibility]
 ui_scale = 1.20
 
+[lockscreen]
+transition = []
+transition_duration = 100.0 # minimum accepted; empty transition list disables effects
+
 [bar.default]
 center = [ "workspaces", "scratch_indicator" ]
-concave_edge_corners = true
+concave_edge_corners = false
 end = [ "media", "tray", "network", "volume", "notifications", "home", "clock" ]
 margin_edge = 0
 margin_ends = 0
-radius_bottom_left = 12
-radius_bottom_right = 12
+radius_bottom_left = 0
+radius_bottom_right = 0
 radius_top_left = 0
 radius_top_right = 0
 scale = 1.10
-start = [ "session", "launcher", "spacer_1", "active_window" ]
+start = [ "session", "launcher", "active_window" ]
 thickness = 35
 
 [shell]
 clipboard_image_action_command = "satty -f -"
+clipboard_history_max_entries = 10
 launch_apps_as_systemd_services = true
 polkit_agent = false
-settings_show_advanced = true
+settings_show_advanced = false
 
     [shell.greeter_sync]
     auto_sync = true
 
     [shell.panel]
-    open_near_click_control_center = true
+    open_near_click_control_center = false
+    control_center_placement = "floating"
+    control_center_position = "top_right"
     session_placement = "floating"
     session_position = "center"
 
@@ -44,7 +51,7 @@ settings_show_advanced = true
 
     [[shell.session.actions]]
     action = "logout"
-    countdown_seconds = 0.0
+    countdown_seconds = 3.0
     enabled = true
     shortcut = "2"
     variant = "default"
@@ -75,11 +82,13 @@ gpu_poll_seconds = 2
 
 [theme]
 mode = "dark"
-source = "wallpaper"
+source = "custom"
+custom_palette = "NeutralDark"
+pure_black_dark = false
 wallpaper_scheme = "m3-tonal-spot"
 
     [theme.templates]
-    builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "alacritty" ]
+    builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "hyprland", "qt", "alacritty" ]
 
 [widget.clock]
 color = "secondary"
@@ -101,7 +110,7 @@ show_vpn_label = false
 color = "secondary"
 
 [widget.session]
-color = "error"
+color = "secondary"
 
 [widget.scratch_indicator]
 type = "local/scratch-workspace-indicator:scratch-workspace-indicator"
@@ -113,7 +122,7 @@ max_label_chars = 0
 type = "spacer"
 
 [widget.tray]
-capsule = true
+capsule = false
 capsule_fill = "on_secondary"
 
 [widget.volume]
@@ -121,11 +130,11 @@ color = "secondary"
 show_label = false
 
 [widget.workspaces]
-active_pill_size = 2.5
+active_pill_size = 1.5
 capsule = true
 capsule_fill = "on_primary"
 font_weight = 700
-hide_when_empty = true
+hide_when_empty = false
 inactive_pill_size = 1.0
 pill_scale = 0.80
 show_labels = true
@@ -156,3 +165,21 @@ tooltip = "Control Center Home"
 
 [widget.home.actions]
 left = "panel-toggle control-center home"
+
+[shell.window_switcher]
+mru = true
+
+# Keep search focused; category filters remain available with Tab.
+[shell.launcher]
+categories = false
+show_app_origin_indicator = false
+
+
+# No shell or wallpaper animations.
+[shell.animation]
+enabled = false
+
+[wallpaper]
+transition = []
+transition_duration = 100.0 # minimum accepted; empty transition list disables effects
+transition_on_startup = false
