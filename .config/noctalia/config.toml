@@ -20,6 +20,8 @@ start = [ "session", "launcher", "active_window" ]
 thickness = 35
 
 [shell]
+app_icon_colorize = true
+app_icon_color = "on_surface"
 clipboard_image_action_command = "satty -f -"
 clipboard_history_max_entries = 10
 launch_apps_as_systemd_services = true
@@ -122,6 +124,8 @@ max_label_chars = 0
 type = "spacer"
 
 [widget.tray]
+color = "on_surface"
+match_adjacent_spacing = true
 capsule = false
 capsule_fill = "on_secondary"
 
