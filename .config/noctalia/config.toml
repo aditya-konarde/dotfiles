@@ -8,7 +8,7 @@ transition_duration = 100.0 # minimum accepted; empty transition list disables e
 [bar.default]
 center = [ "workspaces", "scratch_indicator" ]
 concave_edge_corners = false
-end = [ "media", "tray", "network", "volume", "notifications", "home", "clock" ]
+end = [ "tray", "tray_gap", "volume", "notifications", "home", "clock" ]
 margin_edge = 0
 margin_ends = 0
 radius_bottom_left = 0
@@ -91,8 +91,8 @@ wallpaper_scheme = "m3-tonal-spot"
     builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "hyprland", "qt", "alacritty" ]
 
 [widget.clock]
-color = "secondary"
-format = "{:%a %d %b · %H:%M}"
+color = "on_surface"
+format = "{:%a %-d %b · %H:%M}"
 
 [widget.launcher]
 color = "secondary"
@@ -107,7 +107,7 @@ show_label = false
 show_vpn_label = false
 
 [widget.notifications]
-color = "secondary"
+color = "on_surface"
 
 [widget.session]
 color = "secondary"
@@ -126,7 +126,7 @@ capsule = false
 capsule_fill = "on_secondary"
 
 [widget.volume]
-color = "secondary"
+color = "on_surface"
 show_label = false
 
 [widget.workspaces]
@@ -159,9 +159,9 @@ type = "local/audio-output-cycle:cycle"
 
 [widget.home]
 type = "custom_button"
-glyph = "home"
-color = "secondary"
-tooltip = "Control Center Home"
+glyph = "adjustments-horizontal"
+color = "on_surface"
+tooltip = "Control Center"
 
 [widget.home.actions]
 left = "panel-toggle control-center home"
@@ -183,3 +183,9 @@ enabled = false
 transition = []
 transition_duration = 100.0 # minimum accepted; empty transition list disables effects
 transition_on_startup = false
+
+# Separate app-owned tray icons from consistent system controls.
+[widget.tray_gap]
+type = "spacer"
+length = 8
+interactive = false
