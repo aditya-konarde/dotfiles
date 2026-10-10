@@ -171,6 +171,17 @@ installer does not do this. Check effective Noctalia settings for runtime overri
 use the supplied NeutralDark palette and exclude Kitty from automatic templates.
 Preserve unrelated local state rather than copying it into this repository.
 
+## Lockscreen layout setup
+
+The lockscreen template uses `OUTPUT_NAME` rather than a host connector. During
+authorized setup, replace all occurrences, including the login-box key, with the
+verified target output. Adapt the 3840×2160 reference layout in the unlocked widget
+editor with user authorization. Reconcile only lockscreen overrides in existing
+Noctalia state; never copy the entire private state file into the repository.
+The generated wallpaper is installed by the manifest. Its metadata-free PNG is
+allowed by an exact reviewed SHA-256; a replacement requires fresh visual and
+metadata review and an updated digest, not a blanket binary exclusion.
+
 ## Repository changes and publication
 
 - Keep secrets, identities, host inventories, and machine/session state outside

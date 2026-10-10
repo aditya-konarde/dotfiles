@@ -6,12 +6,18 @@ Diagnostics contain filenames and line numbers, never matching values.
 """
 
 import argparse
+import hashlib
 import os
 from pathlib import Path
 import re
 import subprocess
 import sys
 
+
+# Exact reviewed asset only: generated monochrome landscape, optional PNG metadata removed.
+REVIEWED_BINARY_ASSETS = {
+    '.config/noctalia/wallpapers/monochrome-mist.png': '0361f7de880040c25c2dba397cc4c89ac4fc91bd17ccd979f6bb4577b245697e',
+}
 
 RULES = {
     "personal home directory": re.compile(
@@ -79,6 +85,8 @@ def main():
                 continue
             data = source.read_bytes()
         scanned += 1
+        if name in REVIEWED_BINARY_ASSETS and hashlib.sha256(data).hexdigest() == REVIEWED_BINARY_ASSETS[name]:
+            continue
         try:
             contents = data.decode("utf-8")
         except UnicodeDecodeError:

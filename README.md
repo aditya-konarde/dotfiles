@@ -103,6 +103,21 @@ Kitty uses `Ctrl+Shift+F` for scrollback (`/` to search, `q` to return),
 pane closing. Split rotation moved to `Ctrl+Shift+Alt+F`. Machine-local Command-key
 translations and personal launcher helpers are not copied into this public profile.
 
+## Minimal lockscreen
+
+The Noctalia profile includes a monochrome mist landscape, clock/date near the
+upper centre, and a compact centred unlock field with a shield icon. Calendar and
+weather widgets are omitted. The bundled background is AI-generated; optional PNG
+metadata is stripped. Its exact content hash is reviewed by the public-config checker.
+
+Before using the layout, replace every `OUTPUT_NAME` in `.config/noctalia/config.toml`
+(including the login-box table key) with the intended connector from `hyprctl monitors`.
+Placement uses a 3840×2160 reference canvas. Use `noctalia msg lockscreen-widgets-edit`
+on an empty workspace to adapt placement/size to your display, then click Done.
+On existing installations, saved `[lockscreen]` and `[lockscreen_widgets]` values in
+Noctalia's state file override these defaults; back up and reconcile only those
+sections, preserving unrelated state. The installer does not modify that state file.
+
 ## macOS and older desktops
 
 `./install.sh` installs the Brewfile and applies `macos.sh`. It uses the separate
