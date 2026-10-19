@@ -10,17 +10,18 @@ Source of truth: `~/.config/hypr/config/binds.lua` (regenerate/update this file 
 | `SUPER + Q` | Close window |
 | `SUPER + Escape` | Kill window (`hyprctl kill`) |
 | `SUPER + ALT + Space` | Toggle floating |
-| `SUPER + F` | Fullscreen (mode 0) |
-| `SUPER + D` | Maximize (fullscreen mode 1) |
-| `SUPER + J` | Toggle split |
+| `SUPER + ALT + F` | Fullscreen (mode 0) |
+| `SUPER + ALT + D` | Maximize (fullscreen mode 1) |
+| `SUPER + ALT + J` | Toggle split |
 
 ## Focus
 
 | Shortcut | Action |
 | --- | --- |
 | `SUPER + Left/Right/Up/Down` | Move focus in direction |
-| `ALT + Tab` | Cycle to next window |
-| `SUPER + Tab` | Window switcher (noctalia) |
+| `ALT + Tab` | Window switcher (hold) |
+| `SUPER + Tab` | Window switcher (hold) |
+| `SUPER + SHIFT + Tab` | Window switcher (hold) |
 
 ## Move / resize windows
 
@@ -48,17 +49,22 @@ Source of truth: `~/.config/hypr/config/binds.lua` (regenerate/update this file 
 | Shortcut | Action |
 | --- | --- |
 | `SUPER + Return` | Terminal (kitty) |
-| `SUPER + E` | File manager (dolphin) |
-| `SUPER + T` | Editor (gnome-text-editor) |
-| `SUPER + C` (or `XF86Calculator`) | Calculator |
-| `SUPER + W` | Browser (brave-origin) |
+| `SUPER + E` | Launch or focus files helper |
+| `SUPER + ALT + T` | Launch or focus editor helper |
+| `SUPER + CONTROL + C` | Launch or focus calculator helper |
+| `XF86Calculator` | Calculator |
+| `SUPER + ALT + W` | Launch or focus browser helper |
 | `CONTROL + SHIFT + Escape` | btop in terminal |
-| `SUPER + Z` | Noctalia settings |
-| `SUPER + X` | Control center |
+| `SUPER + ALT + Z` | Noctalia settings |
+| `SUPER + ALT + X` | Control center |
 | `SUPER + Space` | Launcher |
 | `SUPER + period` | Emoji launcher |
+| `ALT + Space` | Launcher |
 | `SUPER + L` | Lock session |
 | `SUPER + ALT + C` | Session panel |
+| `SUPER + ALT + V` | Clipboard history |
+| `SUPER + ALT + M` | Desktop actions menu helper |
+| `SUPER + ALT + K` | Shortcut guide helper |
 
 ## Hardware controls
 
@@ -75,15 +81,15 @@ Source of truth: `~/.config/hypr/config/binds.lua` (regenerate/update this file 
 
 | Shortcut | Action |
 | --- | --- |
-| `CONTROL + ALT + Space` | Handy speech-to-text toggle |
-| `CONTROL + SHIFT + Space` | Handy post-process toggle |
-| `CONTROL + F13` | Handy toggle (G502 X sniper button) |
-| `SUPER + P` | Color picker (`hyprpicker -a -n`) |
+| `SUPER + ALT + P` | Color picker (`hyprpicker -a -n`) |
 | `Print` | Screenshot region |
+| `SUPER + SHIFT + 4` | Screenshot region |
 | `SUPER + Print` | Screenshot fullscreen |
-| `SUPER + SHIFT + W` | Wallpaper panel |
-| `SUPER + V` | Clipboard history |
-| `SUPER + A` | Notifications panel |
+| `SUPER + ALT + SHIFT + 3` | Screenshot fullscreen |
+| `SUPER + ALT + SHIFT + W` | Wallpaper panel |
+| `SUPER + ALT + A` | Notifications panel |
+| `SUPER + ALT + O` | Extract region text helper |
+| `SUPER + BackSpace` | Delete selection / move files to trash |
 
 ## Workspaces & monitors
 
@@ -96,11 +102,12 @@ Source of truth: `~/.config/hypr/config/binds.lua` (regenerate/update this file 
 | `SUPER + CONTROL + Down` | Focus next empty workspace on monitor |
 | `SUPER + mouse_down / mouse_up` | Scroll through workspaces (next/prev) |
 | `SUPER + CONTROL + mouse_down / mouse_up` | Same, on current monitor |
-| `SUPER + S` | Toggle scratchpad workspace |
-| `SUPER + SHIFT + S` | Move window to scratchpad workspace |
+| `SUPER + ALT + S` | Toggle scratchpad workspace |
+| `SUPER + ALT + SHIFT + S` | Move window to scratchpad workspace |
 
 ## Notes
 
 - `SUPER + 1/2/3` focuses numbered workspaces; use `SUPER + ALT + 1/2/3` to focus monitors.
-- Fullscreen mode 0 (`SUPER + F`) covers the whole screen; mode 1 (`SUPER + D`) maximizes within the tiled layout.
+- Fullscreen mode 0 (`SUPER + ALT + F`) covers the whole screen; mode 1 (`SUPER + ALT + D`) maximizes within the tiled layout.
 - Numbered workspace binds are generated from `NUM_WPM` in `config/variables.lua`; raise it (max 10) to get more numbered binds.
+- Launch and utility binds call the local `~/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py` helper. Replace them if that helper is not installed. Handy is not started or bound by this profile.

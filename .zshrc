@@ -124,6 +124,28 @@ read-secret() {
     command secret-tool lookup service secrets key "$1"
 }
 
+# Load the Z.ai API key on demand instead of querying the keyring at startup.
+load-zai-key() {
+    if [[ -n "${ZAI_API_KEY:-}" ]]; then
+        return 0
+    fi
+
+    local value="$(read-secret zai-api-key 2>/dev/null)"
+    if [[ -z "$value" ]]; then
+        echo "No 'zai-api-key' secret found in GNOME Keyring" >&2
+        return 1
+    fi
+
+    export ZAI_API_KEY="$value"
+    value=''
+}
+
+# pi needs ZAI_API_KEY when that key is available, so load it on first use.
+pi() {
+    [[ -n "${ZAI_API_KEY:-}" ]] || load-zai-key >/dev/null 2>&1 || true
+    command pi "$@"
+}
+
 # Auto-Warpify
 if [[ -o interactive && "${TERM_PROGRAM:-}" == WarpTerminal ]]; then
     printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh", "uname": "Linux" }}\x9c'
@@ -132,6 +154,14 @@ fi
 # >>> railway initialize >>>
 [[ -r "$HOME/.railway/env" ]] && source "$HOME/.railway/env"
 # <<< railway initialize <<<
+
+# Keep local Prime Agent sessions and generated files in the dedicated workspace.
+prime-agent() {
+    (
+        cd "$HOME/prime-agent-workspace" || exit 1
+        command prime-agent "$@"
+    )
+}
 
 # Terminal & Editor defaults
 export TERMINAL="kitty"
@@ -158,6 +188,28 @@ fi
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
+
+# npv — neural player (optimized Strix Halo 4K restoration)
+alias npv="$HOME/.local/bin/npv"
+
+# Route Droid through the OpenCode Go launcher.
+alias droid='droid-go'
+
+# Initialize zoxide before routing cd through it.
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd="z"
+fi
+
+# Swift toolchain for xtool iOS development
+. "$HOME/.local/share/swiftly/env.sh"
+
+
+# Added by Antigravity CLI installer
+export PATH="$HOME/.local/bin:$PATH"
+
+# gcx: opt out of anonymous usage telemetry (honored by gcx >= 1.0)
+export GCX_TELEMETRY=disabled
 
 # Credentials, remote hosts, and machine-specific aliases stay in this local file.
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

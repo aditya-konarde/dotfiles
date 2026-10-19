@@ -49,6 +49,7 @@ scripts. The following groups are a starting inventory, not fixed package names:
 | Screenshots/plugins | Satty, hyprpicker, `socat`, `pactl`, `notify-send`, Python; clipboard utilities used by enabled features |
 | Audio | A working audio server exposing `pactl`; on a fresh PipeWire setup, its session manager and PulseAudio compatibility service |
 | Terminal appearance | Fontconfig and the actual Nerd Font families named in the installed Kitty and Alacritty configs |
+| Default dictation | Wispr Flow; on CachyOS/Arch install with `paru -S wispr-flow-appimage` during dependency setup |
 | Other selected apps | Zsh/Fish, Zellij, Alacritty, btop, Starship, mpv, MangoHud, Micro, GitHub CLI, and enabled shell helpers |
 | Optional integrations | Handy AppImage, ChatGPT launcher, developer CLI tools, keyring helpers, and ROCm settings only when requested or applicable |
 | Repo maintenance | Python and Gitleaks for the public-config checks and commit hook |
@@ -161,6 +162,12 @@ substituted, skipped optional integrations, host-specific adaptations, backup an
 rollback paths, checks actually completed, and remaining user actions. Rollback
 restores only files replaced by this run from their matching backup paths; review
 newly created files separately. Do not remove unrelated packages or user data.
+
+## Application keyboard shortcuts
+
+Keep application editing shortcuts native. Do not add compositor bindings that
+translate Super copy/paste or other editing keys into synthetic Ctrl shortcuts;
+these overrides caused repeated characters in the live session.
 
 ## Desktop motion and theme policy
 

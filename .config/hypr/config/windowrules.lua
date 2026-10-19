@@ -121,3 +121,18 @@ hl.window_rule({
     },
     no_focus = true,
 })
+
+-- Wispr's transparent dictation bar: no compositor frame, bottom center.
+hl.window_rule({
+    name = "wispr-flow-status-bar",
+    match = { class = "^(wispr-flow)$", initial_title = "^(Flow Status Indicator)$" },
+    float = true,
+    center = false,
+    pin = true,
+    decorate = false,
+    border_size = 0,
+    no_shadow = true,
+    no_blur = true,
+    rounding = 0,
+    move = { "(monitor_w-window_w)/2", "monitor_h-window_h-24" },
+})

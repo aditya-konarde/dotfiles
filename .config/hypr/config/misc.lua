@@ -13,7 +13,8 @@ hl.config({
         middle_click_paste = false,
         -- Keep terminal-launched apps separate instead of replacing the terminal.
         enable_swallow = false,
-        vrr = 1,
+        -- Fixed refresh avoids OLED brightness flicker in dark content.
+        vrr = 0,
     },
     render = {
         direct_scanout = 2,

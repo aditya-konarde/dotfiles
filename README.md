@@ -10,8 +10,8 @@ The October 2026 desktop refinement includes:
 
 - Lua Hyprland configuration: three numbered workspaces, window movement with
   `Super+Shift+1–3`, a named scratch workspace, adaptive pointer acceleration,
-  opaque windows, click-to-focus, most-recently-used focus on close, thin focus
-  borders, disabled animations/blur, and the existing VRR/4K/240 Hz monitor profile.
+  opaque windows, focus on mouse hover, most-recently-used focus on close, thin steady
+  borders, disabled animations/blur, and a fixed-refresh 4K/120 Hz HDR monitor profile.
 - Stable app launch destinations: terminals on workspace 1, Brave Origin/Firefox/Zen
   on 2, and Dolphin/Nautilus/GNOME Text Editor plus Artemis and messaging apps
   (Beeper, Telegram, Discord/Vesktop, Signal, Slack) on 3. Launches do not switch the
@@ -22,9 +22,13 @@ The October 2026 desktop refinement includes:
   screenshot annotation. Shell, wallpaper, and lock-screen animations are disabled.
 - Local Noctalia plugins for a distinct scratch-workspace indicator and audio
   output cycling from Control Center Home. Public plugin IDs use `local/`.
-- Handy transcription shortcuts and an AppImage launcher; the microphone shortcut
-  is `Ctrl+Alt+Space`. The launcher looks in `~/Applications` for Handy AppImages.
-- Kitty split layouts, explicit clipboard copying, running-command close
+- Wispr Flow as a default dictation app, with a frameless bar pinned across
+  workspaces at bottom center, 24 pixels above the screen edge. The rule matches
+  its initial title because the app changes the title to `Status` after opening.
+- An optional Handy AppImage launcher. The current profile does not start or bind
+  Handy because Wispr Flow handles dictation.
+- Kitty split layouts with focus on mouse hover and steady pane dividers,
+  automatic clipboard copying on selection, running-command close
   confirmation, current-directory tabs, searchable scrollback, and an opaque
   palette independent of Noctalia. Cursor blinking/trails and bell animation are
   disabled. Also included: Alacritty, Zellij, Starship,
@@ -47,7 +51,14 @@ Install dependencies separately. The desktop uses Hyprland, Noctalia, UWSM,
 Kitty, Dolphin, Brave Origin, GNOME Text Editor/Calculator, Satty, hyprpicker,
 PipeWire/PulseAudio tools (`pactl`), `socat`, Python 3, and `notify-send`. Install
 Zellij for Alacritty's default shell and the Nerd Fonts named in the terminal
-configs. Handy is optional; its AppImage is not included.
+configs. Wispr Flow is part of the default Linux app set. On CachyOS/Arch,
+install its AUR package with Paru during dependency setup:
+
+```sh
+paru -S wispr-flow-appimage
+```
+
+Handy is optional; its AppImage is not included.
 
 Preview the exact files, then install when ready:
 
@@ -63,8 +74,8 @@ writes remain outside this repository. It does not install packages or reload th
 running desktop. `--target /path/to/test-home` supports a separate destination.
 
 Before using the desktop, edit `config/variables.lua` for applications and
-`config/monitors.lua` for your monitor. The supplied 4K/240 Hz mode is a hardware
-preference; change it to `preferred` for a different display. Add `~/.local/bin`
+`config/monitors.lua` for your monitor. The supplied 4K/120 Hz HDR mode is a
+hardware preference; change it to `preferred` for a different display. Add `~/.local/bin`
 to your graphical session's PATH for the helper commands.
 
 After installation, enable the plugins in Noctalia Settings → Plugins, or run:
@@ -76,9 +87,10 @@ noctalia msg plugins enable local/audio-output-cycle
 
 The plugins use neutral public IDs, so they must be enabled separately from any
 existing private copies. Manage older copies in Noctalia Settings. The bounded
-lock/display recovery helper is retained, but its temporary diagnostic collector
-is excluded. The helper preserves the session lock and writes diagnostic output
-only under `~/.local/state/`.
+lock/display recovery helper is retained. Its diagnostic collector is expected at
+`~/.local/state/hypr-lock-display/diagnostics/capture.py` and is not installed by
+this repository; the helper preserves the session lock and writes diagnostic
+output only under `~/.local/state/`.
 
 ## Animation-free desktop and existing installations
 
@@ -105,8 +117,10 @@ not be overridden by an automatically re-added `include themes/noctalia.conf`.
 
 Kitty uses `Ctrl+Shift+F` for scrollback (`/` to search, `q` to return),
 `Ctrl+Shift+T` for a tab in the current directory, and `Ctrl+Shift+W` for protected
-pane closing. Split rotation moved to `Ctrl+Shift+Alt+F`. Machine-local Command-key
-translations and personal launcher helpers are not copied into this public profile.
+pane closing. Split rotation moved to `Ctrl+Shift+Alt+F`. Application copy/paste and editing shortcuts use native app bindings; compositor
+Command-to-Control translations were removed after repeated-character problems.
+Launcher and utility binds call the local `~/hermes-workspace/.../desktop.py`
+helper; that helper is not copied into this public profile.
 
 ## Minimal lockscreen
 

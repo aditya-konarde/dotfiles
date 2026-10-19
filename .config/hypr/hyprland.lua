@@ -17,3 +17,14 @@ require("config.workspaces")
 
 -- For Noctalia Color templates
 require("noctalia").apply_theme()
+
+-- Keep the outer window frame steady when mouse hover changes focus.
+-- Apply after the theme so generated colors cannot override this preference.
+hl.config({
+    general = {
+        col = {
+            active_border = "rgb(36465f)",
+            inactive_border = "rgb(36465f)",
+        },
+    },
+})

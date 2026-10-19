@@ -3,8 +3,8 @@
 hl.config({
     input = {
         sensitivity = 0.30,
-        -- Keep keyboard focus stable until an explicit click or shortcut.
-        follow_mouse = 0,
+        -- Focus the window under the mouse pointer.
+        follow_mouse = 1,
         -- Return to the most recently used window after closing one.
         focus_on_close = 2,
         float_switch_override_focus = 0,

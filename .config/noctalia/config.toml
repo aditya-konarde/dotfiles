@@ -20,7 +20,7 @@ radius_bottom_right = 0
 radius_top_left = 0
 radius_top_right = 0
 scale = 1.10
-start = [ "session", "launcher", "active_window" ]
+start = [ "session", "launcher" ]
 thickness = 35
 
 [shell]
