@@ -1,5 +1,12 @@
 -- Window rules wiki https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 
+-- Stable launch destinations; do not switch away from the current workspace.
+-- These initial placement rules still allow manual moves and the scratchpad.
+hl.window_rule({ match = { class = "^(kitty|ghostty|[Kk]onsole|Alacritty|gnome-terminal|xfce[0-9]?-terminal)$" }, workspace = "1 silent" })
+hl.window_rule({ match = { class = "^(brave-origin|firefox|zen)$" }, workspace = "2 silent" })
+hl.window_rule({ match = { class = "^(org\\.kde\\.dolphin|org\\.gnome\\.Nautilus|org\\.gnome\\.TextEditor)$" }, workspace = "3 silent" })
+hl.window_rule({ match = { class = "^(artemis|[Bb]eeper|org\\.telegram\\.desktop|TelegramDesktop|telegram-desktop|vesktop|discord|[Ss]ignal|[Ss]lack)$" }, workspace = "3 silent" })
+
 -- Generic floating position
 hl.window_rule({ match = { float = true }, center = true, persistent_size = true })
 

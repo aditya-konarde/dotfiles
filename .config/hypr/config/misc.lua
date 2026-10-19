@@ -11,8 +11,8 @@ hl.config({
             splash = CACHYLGREEN,
         },
         middle_click_paste = false,
-        enable_swallow = true,
-        swallow_regex = "(kitty|ghostty|[Kk]onsole|Alacritty|gnome-terminal|xfce[0-9]?-terminal)",
+        -- Keep terminal-launched apps separate instead of replacing the terminal.
+        enable_swallow = false,
         vrr = 1,
     },
     render = {

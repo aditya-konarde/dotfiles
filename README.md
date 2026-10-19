@@ -12,6 +12,11 @@ The October 2026 desktop refinement includes:
   `Super+Shift+1–3`, a named scratch workspace, adaptive pointer acceleration,
   opaque windows, click-to-focus, most-recently-used focus on close, thin focus
   borders, disabled animations/blur, and the existing VRR/4K/240 Hz monitor profile.
+- Stable app launch destinations: terminals on workspace 1, Brave Origin/Firefox/Zen
+  on 2, and Dolphin/Nautilus/GNOME Text Editor plus Artemis and messaging apps
+  (Beeper, Telegram, Discord/Vesktop, Signal, Slack) on 3. Launches do not switch the
+  current workspace; manual moves and the scratchpad remain available. Terminal
+  swallowing is disabled so GUI apps launched from Kitty keep separate windows.
 - Noctalia NeutralDark palette, a flat bar with stable workspace labels, a
   search-first launcher, top-right Control Center, startup DND, and Satty
   screenshot annotation. Shell, wallpaper, and lock-screen animations are disabled.
