@@ -141,9 +141,12 @@ show_label = false
 active_pill_size = 1.5
 capsule = true
 capsule_fill = "on_primary"
+font_family = "JetBrainsMono Nerd Font"
 font_weight = 700
 hide_when_empty = false
 inactive_pill_size = 1.0
+label_source = "name"
+max_label_chars = 20
 pill_scale = 0.80
 show_labels = true
 

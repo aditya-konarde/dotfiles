@@ -17,9 +17,12 @@ The October 2026 desktop refinement includes:
   (Beeper, Telegram, Discord/Vesktop, Signal, Slack) on 3. Launches do not switch the
   current workspace; manual moves and the scratchpad remain available. Terminal
   swallowing is disabled so GUI apps launched from Kitty keep separate windows.
-- Noctalia NeutralDark palette, a flat bar with stable workspace labels, a
+- Noctalia NeutralDark palette, a flat bar with icon-only workspace labels
+  (terminal prompt for 1, globe for Web on 2, app grid for Other on 3), a
   search-first launcher, top-right Control Center, startup DND, and Satty
   screenshot annotation. Shell, wallpaper, and lock-screen animations are disabled.
+  The workspace widget uses JetBrainsMono Nerd Font; numeric IDs and shortcuts
+  remain unchanged, and empty workspaces keep their icons visible.
 - Local Noctalia plugins for a distinct scratch-workspace indicator and audio
   output cycling from Control Center Home. Public plugin IDs use `local/`.
 - Wispr Flow as a default dictation app, with a frameless bar pinned across
