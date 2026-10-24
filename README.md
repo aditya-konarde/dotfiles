@@ -122,6 +122,11 @@ Kitty uses `Ctrl+Shift+F` for scrollback (`/` to search, `q` to return),
 `Ctrl+Shift+T` for a tab in the current directory, and `Ctrl+Shift+W` for protected
 pane closing. Split rotation moved to `Ctrl+Shift+Alt+F`. Application copy/paste and editing shortcuts use native app bindings; compositor
 Command-to-Control translations were removed after repeated-character problems.
+Kitty accepts `Ctrl+V` to paste and `Ctrl+C` to copy selected text; with no
+selection, `Ctrl+C` still interrupts. Copy-on-selection and `Ctrl+Shift+C/V`
+remain available. Noctalia clipboard history explicitly uses `Ctrl+V` for
+automatic paste, matching Kitty and GUI apps instead of choosing `Ctrl+Shift+V`
+for text in auto mode.
 Launcher and utility binds call the local `~/hermes-workspace/.../desktop.py`
 helper; that helper is not copied into this public profile.
 

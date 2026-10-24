@@ -168,6 +168,10 @@ newly created files separately. Do not remove unrelated packages or user data.
 Keep application editing shortcuts native. Do not add compositor bindings that
 translate Super copy/paste or other editing keys into synthetic Ctrl shortcuts;
 these overrides caused repeated characters in the live session.
+Keep Noctalia `clipboard_auto_paste = "ctrl_v"` aligned with Kitty
+`map ctrl+v paste_from_clipboard`. Kitty uses `map ctrl+c copy_or_interrupt`
+to copy selected text while preserving interrupt behavior without a selection.
+Preserve copy-on-selection and the standard Ctrl+Shift+C/V bindings.
 
 ## Desktop motion and theme policy
 
