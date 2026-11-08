@@ -12,7 +12,7 @@ end
 local home = os.getenv("HOME")
 local mainMod = "SUPER"
 local noctCall = "noctalia msg "
-local launchPrefix = "uwsm app -- " -- if you are not using UWSM, make this empty (e.g. "")
+local launchPrefix = "uwsm app -t service -- "
 
 ---------------------------
 ---- WINDOW MANAGEMENT ----
@@ -24,7 +24,7 @@ bind("Close window", mainMod .. " + Q",           hl.dsp.window.close())
 bind("Toggle floating", mainMod .. " + ALT + Space", hl.dsp.window.float({ action = "toggle" }))
 bind("Toggle fullscreen", mainMod .. " + ALT + D",           hl.dsp.window.fullscreen({ mode = 1 }))
 bind("Toggle fullscreen", mainMod .. " + ALT + F", hl.dsp.window.fullscreen())
-bind("Toggle split", mainMod .. " + ALT + J",           hl.dsp.layout("togglesplit"))
+bind("Swap with master", mainMod .. " + ALT + J", hl.dsp.layout("swapwithmaster"))
 
 -- Change focus
 bind("Focus window / workspace", mainMod .. " + Left",  hl.dsp.focus({ direction = "left" }))
@@ -40,7 +40,7 @@ bind("Move window", mainMod .. " + SHIFT + Up",                   hl.dsp.window.
 bind("Move window", mainMod .. " + SHIFT + Right",                hl.dsp.window.move({ direction = "r" }))
 bind("Move window", mainMod .. " + SHIFT + Left",                 hl.dsp.window.move({ direction = "l" }))
 bind("Move window", mainMod .. " + SHIFT + Down",                 hl.dsp.window.move({ direction = "d" }))
-for i = 1, NUM_WPM do
+for i = 1, NUM_WORKSPACES do
     local key = i % 10
     bind("Move window", mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
@@ -50,7 +50,7 @@ bind("Move window", mainMod .. " + CONTROL + SHIFT + Right",      hl.dsp.window.
 bind("Move window", mainMod .. " + CONTROL + SHIFT + Left",       hl.dsp.window.move({ workspace = "m-1" }))
 bind("Move window", mainMod .. " + CONTROL + SHIFT + mouse_up",   hl.dsp.window.move({ workspace = "m-1" }))
 bind("Move window", mainMod .. " + CONTROL + SHIFT + mouse_down", hl.dsp.window.move({ workspace = "m+1" }))
-for i = 1, NUM_WPM do
+for i = 1, NUM_WORKSPACES do
     local key = i % 10
     bind("Move window", mainMod .. " + SHIFT + CONTROL + " .. key, hl.dsp.window.move({ workspace = "m~" .. i }))
 end
@@ -83,14 +83,10 @@ bind("Adjust cursor zoom", mainMod .. " + KP_Add", function() zoomfunction(0.3) 
 ------------------
 
 bind("New terminal", mainMod .. " + Return",     hl.dsp.exec_cmd(launchPrefix .. TERMINAL))
-hl.unbind("SUPER + E")
 bind("Launch or focus files", "SUPER + E", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py app files"))
-hl.unbind("SUPER + ALT + T")
 bind("Launch or focus editor", "SUPER + ALT + T", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py app editor"))
-hl.unbind("SUPER + CONTROL + C")
 bind("Launch or focus calculator", "SUPER + CONTROL + C", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py app calculator"))
 bind("Open calculator", "XF86Calculator",           hl.dsp.exec_cmd(launchPrefix .. CALCULATOR))
-hl.unbind("SUPER + ALT + W")
 bind("Launch or focus browser", "SUPER + ALT + W", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py app browser"))
 bind("Open system monitor", "CONTROL + SHIFT + Escape", hl.dsp.exec_cmd(launchPrefix .. TERMINAL .. " -e btop"))
 bind("Toggle desktop settings", mainMod .. " + ALT + Z",          hl.dsp.exec_cmd(noctCall .. "settings-toggle"))
@@ -142,19 +138,14 @@ bind("Notifications", mainMod .. " + ALT + A", hl.dsp.exec_cmd(noctCall .. "pane
 ---- WORKSPACES & MONITORS ----
 -------------------------------
 
--- Focus on monitors
-bind("Focus window / workspace", mainMod .. " + ALT + 1", hl.dsp.focus({ monitor = MONITOR1 }))
-bind("Focus window / workspace", mainMod .. " + ALT + 2", hl.dsp.focus({ monitor = MONITOR2 }))
-bind("Focus window / workspace", mainMod .. " + ALT + 3", hl.dsp.focus({ monitor = MONITOR3 }))
-
 -- Focus on workspace number
 -- Absolute
-for i = 1, NUM_WPM do
+for i = 1, NUM_WORKSPACES do
     local key = i % 10
     bind("Focus window / workspace", mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
 end
 -- Relative
-for i = 1, NUM_WPM do
+for i = 1, NUM_WORKSPACES do
     local key = i % 10
     bind("Focus window / workspace", mainMod .. " + CONTROL + " .. key, hl.dsp.focus({ workspace = "m~" .. i }))
 end
@@ -170,9 +161,6 @@ bind("Focus window / workspace", mainMod .. " + mouse_up",             hl.dsp.fo
 bind("Focus window / workspace", mainMod .. " + CONTROL + mouse_down", hl.dsp.focus({ workspace = "m+1" }))
 bind("Focus window / workspace", mainMod .. " + CONTROL + mouse_up",   hl.dsp.focus({ workspace = "m-1" }))
 
--- Special workspace (scratchpad)
-bind("Move window", mainMod .. " + ALT + SHIFT + S", hl.dsp.window.move({ workspace = "special:scratch" }))
-bind("Special workspace (scratchpad)", mainMod .. " + ALT + S",         hl.dsp.workspace.toggle_special("scratch"))
 
 -- Delete selection / move files to trash with the Apple keyboard.
 bind("Delete selection / move files to trash", mainMod .. " + BackSpace", hl.dsp.send_shortcut({ mods = "", key = "Delete" }))
@@ -181,12 +169,8 @@ bind("Capture monitor", mainMod .. " + ALT + SHIFT + 3", hl.dsp.exec_cmd(noctCal
 bind("Capture region", mainMod .. " + SHIFT + 4", hl.dsp.exec_cmd(noctCall .. "screenshot-region"))
 
 -- Personal workflow layer
-hl.unbind("SUPER + ALT + M")
 bind("Search desktop actions", "SUPER + ALT + M", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py menu"))
-hl.unbind("SUPER + ALT + V")
 bind("Clipboard history", "SUPER + ALT + V", hl.dsp.exec_cmd("noctalia msg panel-toggle clipboard"))
-hl.unbind("SUPER + ALT + O")
 bind("Extract region text locally", "SUPER + ALT + O", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py ocr"))
-hl.unbind("SUPER + ALT + K")
 bind("Search shortcut guide", "SUPER + ALT + K", hl.dsp.exec_cmd("/usr/bin/python " .. home .. "/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py keys"))
 return catalog

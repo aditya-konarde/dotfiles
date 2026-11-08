@@ -1,13 +1,6 @@
--- Auto-start config
--- if you dont use UWSM add your auto start programs here, otherwise use XDG autostart https://wiki.archlinux.org/title/XDG_Autostart
-
+-- Hyprland owns this session; applications run as systemd user services.
 hl.on("hyprland.start", function ()
-    hl.exec_cmd("dbus-update-activation-environment --systemd --all")
-    hl.exec_cmd("noctalia")
-    -- Enable DND once Noctalia is ready, without blocking other startup apps.
-    hl.exec_cmd([[sh -c 'for attempt in $(seq 1 30); do noctalia msg notification-dnd-set on >/dev/null 2>&1 && exit 0; sleep 1; done; echo "Noctalia: could not enable startup DND" >&2; exit 1']])
-    hl.exec_cmd("xhost +SI:localuser:root")
-    -- launch browser and terminal at startup
-    hl.exec_cmd("uwsm app -- " .. TERMINAL)
-    hl.exec_cmd("uwsm app -- " .. BROWSER)
+    -- Export only desktop routing variables, then start the authentication agent.
+    hl.exec_cmd("sh -c 'dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE HYPRLAND_INSTANCE_SIGNATURE UWSM_APP_UNIT_TYPE && systemctl --user restart hyprpolkitagent.service'")
+    hl.exec_cmd("sh -c 'systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_SESSION_ID XDG_SESSION_TYPE XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE && systemctl --user restart noctalia-session.service'")
 end)

@@ -20,8 +20,14 @@ log_dir = Path.home() / ".local/state/hypr-lock-display"
 log_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
 
 
+MAX_LOG_BYTES = 512 * 1024
+
+
 def log(event, **fields):
-    with (log_dir / "recovery.jsonl").open("a") as stream:
+    log_file = log_dir / "recovery.jsonl"
+    if log_file.exists() and log_file.stat().st_size >= MAX_LOG_BYTES:
+        log_file.replace(log_dir / "recovery.jsonl.1")
+    with log_file.open("a") as stream:
         stream.write(json.dumps({"time": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
                                  "event": event, **fields}) + "\n")
 

@@ -2,7 +2,6 @@
 
 require("config.animations")
 require("config.autostart")
-require("config.colors")
 require("config.decorations")
 require("config.variables")
 require("config.environment")
@@ -13,6 +12,7 @@ require("config.monitors")
 require("config.lock_display_recovery")
 require("config.windowrules")
 require("config.workspaces")
+require("config.workspace_reconnect")
 
 
 -- For Noctalia Color templates
@@ -28,3 +28,4 @@ hl.config({
         },
     },
 })
+

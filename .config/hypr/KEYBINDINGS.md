@@ -1,113 +1,88 @@
-# Hyprland Cheat Sheet
+# Keyboard shortcuts
 
-Source of truth: `~/.config/hypr/config/binds.lua` (regenerate/update this file when binds change).
-`mainMod` = **SUPER**. `NUM_WPM = 3`, so numbered workspaces are `1`–`3`.
+Generated from config/binds.lua. Do not edit this guide by hand.
 
-## Window management
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + Q` | Close window |
-| `SUPER + Escape` | Kill window (`hyprctl kill`) |
-| `SUPER + ALT + Space` | Toggle floating |
-| `SUPER + ALT + F` | Fullscreen (mode 0) |
-| `SUPER + ALT + D` | Maximize (fullscreen mode 1) |
-| `SUPER + ALT + J` | Toggle split |
-
-## Focus
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + Left/Right/Up/Down` | Move focus in direction |
-| `ALT + Tab` | Window switcher (hold) |
-| `SUPER + Tab` | Window switcher (hold) |
-| `SUPER + SHIFT + Tab` | Window switcher (hold) |
-
-## Move / resize windows
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + SHIFT + Up/Right/Left/Down` | Move window in direction |
-| `SUPER + SHIFT + 1/2/3` | Move window to workspace 1/2/3 |
-| `SUPER + CONTROL + SHIFT + 1/2/3` | Move window to workspace on same monitor (offset) |
-| `SUPER + CONTROL + SHIFT + Right/Left` | Move window to next/prev workspace on current monitor |
-| `SUPER + SHIFT + mouse_up / mouse_down` | Move window to previous/next monitor |
-| `SUPER + CONTROL + SHIFT + mouse_up / mouse_down` | Move window to prev/next monitor |
-| `SUPER + mouse:272` (LMB) | Drag window |
-| `SUPER + mouse:273` (RMB) | Resize window |
-
-## Zoom (cursor zoom)
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + Minus` | Zoom out (repeats) |
-| `SUPER + Plus` | Zoom in (repeats) |
-| `SUPER + keypad - / +` | Zoom out/in (repeats) |
-
-## Launcher
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + Return` | Terminal (kitty) |
-| `SUPER + E` | Launch or focus files helper |
-| `SUPER + ALT + T` | Launch or focus editor helper |
-| `SUPER + CONTROL + C` | Launch or focus calculator helper |
-| `XF86Calculator` | Calculator |
-| `SUPER + ALT + W` | Launch or focus browser helper |
-| `CONTROL + SHIFT + Escape` | btop in terminal |
-| `SUPER + ALT + Z` | Noctalia settings |
-| `SUPER + ALT + X` | Control center |
-| `SUPER + Space` | Launcher |
-| `SUPER + period` | Emoji launcher |
-| `ALT + Space` | Launcher |
-| `SUPER + L` | Lock session |
-| `SUPER + ALT + C` | Session panel |
-| `SUPER + ALT + V` | Clipboard history |
-| `SUPER + ALT + M` | Desktop actions menu helper |
-| `SUPER + ALT + K` | Shortcut guide helper |
-
-## Hardware controls
-
-| Shortcut | Action |
-| --- | --- |
-| `XF86AudioRaiseVolume` / `LowerVolume` | Volume up/down |
-| `XF86AudioMute` | Mute output |
-| `XF86AudioMicMute` | Mute mic |
-| `XF86AudioPlay` / `Pause` | Play/pause |
-| `XF86AudioNext` / `Prev` | Next/prev track |
-| `XF86MonBrightnessUp` / `Down` | Brightness up/down |
-
-## Utilities
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + ALT + P` | Color picker (`hyprpicker -a -n`) |
-| `Print` | Screenshot region |
-| `SUPER + SHIFT + 4` | Screenshot region |
-| `SUPER + Print` | Screenshot fullscreen |
-| `SUPER + ALT + SHIFT + 3` | Screenshot fullscreen |
-| `SUPER + ALT + SHIFT + W` | Wallpaper panel |
-| `SUPER + ALT + A` | Notifications panel |
-| `SUPER + ALT + O` | Extract region text helper |
-| `SUPER + BackSpace` | Delete selection / move files to trash |
-
-## Workspaces & monitors
-
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + 1/2/3` | Focus workspace 1/2/3 (absolute) |
-| `SUPER + ALT + 1/2/3` | Focus monitor 1/2/3 |
-| `SUPER + CONTROL + 1/2/3` | Focus workspace by offset (relative) |
-| `SUPER + CONTROL + Right/Left` | Focus next/prev workspace on monitor |
-| `SUPER + CONTROL + Down` | Focus next empty workspace on monitor |
-| `SUPER + mouse_down / mouse_up` | Scroll through workspaces (next/prev) |
-| `SUPER + CONTROL + mouse_down / mouse_up` | Same, on current monitor |
-| `SUPER + ALT + S` | Toggle scratchpad workspace |
-| `SUPER + ALT + SHIFT + S` | Move window to scratchpad workspace |
-
-## Notes
-
-- `SUPER + 1/2/3` focuses numbered workspaces; use `SUPER + ALT + 1/2/3` to focus monitors.
-- Fullscreen mode 0 (`SUPER + ALT + F`) covers the whole screen; mode 1 (`SUPER + ALT + D`) maximizes within the tiled layout.
-- Numbered workspace binds are generated from `NUM_WPM` in `config/variables.lua`; raise it (max 10) to get more numbered binds.
-- Launch and utility binds call the local `~/hermes-workspace/projects/desktop/cachyos-workflows/desktop.py` helper. Replace them if that helper is not installed. Handy is not started or bound by this profile.
+- **SUPER + Escape**: Hyprland kill selector
+- **SUPER + Q**: Close window
+- **SUPER + ALT + Space**: Toggle floating
+- **SUPER + ALT + D**: Toggle fullscreen
+- **SUPER + ALT + F**: Toggle fullscreen
+- **SUPER + ALT + J**: Swap with master
+- **SUPER + Left**: Focus window / workspace
+- **SUPER + Right**: Focus window / workspace
+- **SUPER + Up**: Focus window / workspace
+- **SUPER + Down**: Focus window / workspace
+- **ALT + Tab**: Window switcher
+- **SUPER + Tab**: Window switcher
+- **SUPER + SHIFT + Tab**: Window switcher
+- **SUPER + SHIFT + Up**: Move window
+- **SUPER + SHIFT + Right**: Move window
+- **SUPER + SHIFT + Left**: Move window
+- **SUPER + SHIFT + Down**: Move window
+- **SUPER + SHIFT + 1**: Move window
+- **SUPER + SHIFT + 2**: Move window
+- **SUPER + SHIFT + 3**: Move window
+- **SUPER + SHIFT + mouse_up**: Move window
+- **SUPER + SHIFT + mouse_down**: Move window
+- **SUPER + CONTROL + SHIFT + Right**: Move window
+- **SUPER + CONTROL + SHIFT + Left**: Move window
+- **SUPER + CONTROL + SHIFT + mouse_up**: Move window
+- **SUPER + CONTROL + SHIFT + mouse_down**: Move window
+- **SUPER + SHIFT + CONTROL + 1**: Move window
+- **SUPER + SHIFT + CONTROL + 2**: Move window
+- **SUPER + SHIFT + CONTROL + 3**: Move window
+- **SUPER + mouse:272**: Drag window
+- **SUPER + mouse:273**: Resize window
+- **SUPER + Minus**: Adjust cursor zoom
+- **SUPER + Plus**: Adjust cursor zoom
+- **SUPER + KP_Subtract**: Adjust cursor zoom
+- **SUPER + KP_Add**: Adjust cursor zoom
+- **SUPER + Return**: New terminal
+- **SUPER + E**: Launch or focus files
+- **SUPER + ALT + T**: Launch or focus editor
+- **SUPER + CONTROL + C**: Launch or focus calculator
+- **XF86Calculator**: Open calculator
+- **SUPER + ALT + W**: Launch or focus browser
+- **CONTROL + SHIFT + Escape**: Open system monitor
+- **SUPER + ALT + Z**: Toggle desktop settings
+- **SUPER + ALT + X**: Toggle control center
+- **SUPER + Space**: Application launcher
+- **SUPER + period**: Application launcher
+- **SUPER + L**: Lock session
+- **SUPER + ALT + C**: Session menu
+- **XF86AudioRaiseVolume**: Raise volume
+- **XF86AudioLowerVolume**: Lower volume
+- **XF86AudioMute**: Mute output
+- **XF86AudioMicMute**: Mute microphone
+- **XF86AudioPlay**: Media
+- **XF86AudioPause**: Media
+- **XF86AudioNext**: Media
+- **XF86AudioPrev**: Media
+- **XF86MonBrightnessUp**: Brightness
+- **XF86MonBrightnessDown**: Brightness
+- **SUPER + ALT + P**: Pick screen color
+- **Print**: Capture region
+- **SUPER + Print**: Capture monitor
+- **SUPER + ALT + SHIFT + W**: Theming and Wallpaper
+- **SUPER + ALT + A**: Notifications
+- **SUPER + 1**: Focus window / workspace
+- **SUPER + 2**: Focus window / workspace
+- **SUPER + 3**: Focus window / workspace
+- **SUPER + CONTROL + 1**: Focus window / workspace
+- **SUPER + CONTROL + 2**: Focus window / workspace
+- **SUPER + CONTROL + 3**: Focus window / workspace
+- **SUPER + CONTROL + Right**: Focus window / workspace
+- **SUPER + CONTROL + Left**: Focus window / workspace
+- **SUPER + CONTROL + Down**: Focus window / workspace
+- **SUPER + mouse_down**: Focus window / workspace
+- **SUPER + mouse_up**: Focus window / workspace
+- **SUPER + CONTROL + mouse_down**: Focus window / workspace
+- **SUPER + CONTROL + mouse_up**: Focus window / workspace
+- **SUPER + BackSpace**: Delete selection / move files to trash
+- **ALT + Space**: Application launcher
+- **SUPER + ALT + SHIFT + 3**: Capture monitor
+- **SUPER + SHIFT + 4**: Capture region
+- **SUPER + ALT + M**: Search desktop actions
+- **SUPER + ALT + V**: Clipboard history
+- **SUPER + ALT + O**: Extract region text locally
+- **SUPER + ALT + K**: Search shortcut guide

@@ -10,7 +10,6 @@
 .config/hypr/config/animations.lua
 .config/hypr/config/autostart.lua
 .config/hypr/config/binds.lua
-.config/hypr/config/colors.lua
 .config/hypr/config/decorations.lua
 .config/hypr/config/environment.lua
 .config/hypr/config/inputs.lua
@@ -19,6 +18,7 @@
 .config/hypr/config/monitors.lua
 .config/hypr/config/variables.lua
 .config/hypr/config/windowrules.lua
+.config/hypr/config/workspace_reconnect.lua
 .config/hypr/config/workspaces.lua
 .config/hypr/hyprland.lua
 .config/hypr/noctalia.lua
