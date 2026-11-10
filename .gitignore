@@ -193,6 +193,7 @@ __pycache__/
 !/.local/share/noctalia/plugins/audio-output-cycle/
 !/.local/bin/cycle-audio-output
 !/.local/bin/hypr-lock-display-recover
+!/.local/bin/yubikey-touch-prompt
 !/.local/share/applications/chatgpt.desktop
 !/.local/share/applications/kitty-open.desktop
 !/.local/share/applications/kitty.desktop

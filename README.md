@@ -101,6 +101,33 @@ lock/display recovery helper is retained. Its diagnostic collector is expected a
 this repository; the helper preserves the session lock and writes diagnostic
 output only under `~/.local/state/`.
 
+### YubiKey touch prompt (optional)
+
+`yubikey-touch-prompt` shows what is waiting for a YubiKey touch. It listens to
+[`yubikey-touch-detector`](https://github.com/maximbaz/yubikey-touch-detector)
+and, for FIDO/U2F requests, reports the process holding the key's HID device
+open: the `ssh` destination and the command that started it (for example
+`git push`) with its directory, or the browser and its focused window title.
+Browsers do not expose the requesting site to other processes, and requests
+from other users' processes (such as `sudo` with `pam_u2f`) or OpenPGP/HMAC
+requests are reported without a confirmed requester. The notification closes
+when the touch completes. Command lines appear in notification history.
+
+For confirmed requests from your own non-browser processes the notification has
+a Deny action. It sends SIGTERM to the requesting command (for example `ssh`)
+and its key helper, so the operation fails instead of waiting for a touch.
+Browser requests are cancelled in the browser's own dialog.
+
+Install `yubikey-touch-detector`, then enable the service:
+
+```sh
+systemctl --user daemon-reload
+systemctl --user enable --now yubikey-touch-prompt.service
+```
+
+While a touch is pending, `yubikey-touch-prompt --explain` prints the same
+information in a terminal.
+
 ## Animation-free desktop and existing installations
 
 Hyprland disables animations globally, including inherited fades and color-matrix

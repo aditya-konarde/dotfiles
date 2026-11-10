@@ -51,7 +51,7 @@ scripts. The following groups are a starting inventory, not fixed package names:
 | Terminal appearance | Fontconfig and the actual Nerd Font families named in the installed Kitty and Alacritty configs |
 | Default dictation | Wispr Flow; on CachyOS/Arch install with `paru -S wispr-flow-appimage` during dependency setup |
 | Other selected apps | Zsh/Fish, Zellij, Alacritty, btop, Starship, mpv, MangoHud, Micro, GitHub CLI, and enabled shell helpers |
-| Optional integrations | ChatGPT launcher, developer CLI tools, keyring helpers, and ROCm settings only when requested or applicable |
+| Optional integrations | ChatGPT launcher, developer CLI tools, keyring helpers, and ROCm settings only when requested or applicable; `yubikey-touch-detector`, `gdbus`, and the `yubikey-touch-prompt.service` user unit only for YubiKey users |
 | Repo maintenance | Python and Gitleaks for the public-config checks and commit hook |
 
 - Check both command availability and compatibility. The reference config was

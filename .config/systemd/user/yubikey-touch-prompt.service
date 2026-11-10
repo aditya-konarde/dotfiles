@@ -1,0 +1,13 @@
+[Unit]
+Description=Show which program is waiting for a YubiKey touch
+Requires=yubikey-touch-detector.socket
+After=yubikey-touch-detector.socket graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/bin/yubikey-touch-prompt
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

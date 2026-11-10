@@ -36,6 +36,7 @@
 .config/noctalia/palettes/NeutralDark.json
 .config/noctalia/palettes/NeutralOLED.json
 .config/starship.toml
+.config/systemd/user/yubikey-touch-prompt.service
 .config/uwsm/env
 .config/xdg-terminal-exec/default.list
 .config/zellij/config.kdl
@@ -46,6 +47,7 @@
 .config/zellij/themes/catppuccin-mocha.kdl
 .local/bin/cycle-audio-output
 .local/bin/hypr-lock-display-recover
+.local/bin/yubikey-touch-prompt
 .local/share/applications/chatgpt.desktop
 .local/share/applications/kitty-open.desktop
 .local/share/applications/kitty.desktop

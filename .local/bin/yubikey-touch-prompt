@@ -1,0 +1,303 @@
+#!/usr/bin/python3
+"""Show which program is waiting for a YubiKey touch.
+
+Listens to yubikey-touch-detector's socket. When a touch is pending, finds the
+processes holding the key's FIDO HID device open and shows their command chain
+in a notification that is closed again once the touch completes. For requests
+from the user's own non-browser processes the notification has a Deny action
+that terminates the requesting command.
+
+Usage:
+  yubikey-touch-prompt                  listen and notify (run as a user service)
+  yubikey-touch-prompt --explain [KIND] print the current requester and exit;
+                                        KIND is U2F (default), GPG, or MAC
+"""
+import html
+import json
+import os
+from pathlib import Path
+import signal
+import socket
+import subprocess
+import sys
+import threading
+import time
+
+DETECTOR = "yubikey-touch-detector"
+FIDO_USAGE_PAGE = bytes([0x06, 0xD0, 0xF1])
+# Helpers that only relay a request; the interesting command is their parent.
+RELAYS = {"ssh-sk-helper", "ssh-pkcs11-helper"}
+# Ancestors at which the command chain stops being informative.
+CHAIN_END = {"zsh", "bash", "fish", "sh", "dash", "nu", "systemd", "init", "login",
+             "kitty", "alacritty", "zellij", "tmux: server", "sshd", "warp-terminal"}
+BROWSERS = {"brave": "Brave", "firefox": "Firefox", "librewolf": "LibreWolf",
+            "chromium": "Chromium", "chrome": "Chrome", "vivaldi": "Vivaldi",
+            "zen": "Zen", "opera": "Opera", "msedge": "Edge"}
+# CCID requests go through scdaemon/pcscd, so these are matched by name only.
+LIKELY = {"GPG": {"gpg", "gpg2", "gpgsm"},
+          "MAC": {"ykchalresp", "ykman", "keepassxc"}}
+KINDS = {"U2F": "FIDO/U2F", "GPG": "OpenPGP", "MAC": "HMAC challenge"}
+MAX_CMD = 110
+MAX_CHAIN = 4
+
+
+def read(path, binary=False):
+    try:
+        data = Path(path).read_bytes()
+    except OSError:
+        return b"" if binary else ""
+    return data if binary else data.decode(errors="replace")
+
+
+def comm(pid):
+    return read(f"/proc/{pid}/comm").strip()
+
+
+def ppid(pid):
+    stat = read(f"/proc/{pid}/stat")
+    try:
+        return int(stat[stat.rindex(")") + 2:].split()[1])
+    except (ValueError, IndexError):
+        return 0
+
+
+def shorten(text):
+    home = os.path.expanduser("~")
+    text = text.replace(home, "~")
+    return text if len(text) <= MAX_CMD else text[:MAX_CMD - 1] + "…"
+
+
+def cmdline(pid):
+    args = [arg for arg in read(f"/proc/{pid}/cmdline").split("\0") if arg]
+    if args:
+        args[0] = os.path.basename(args[0])
+    return shorten(" ".join(args)) or comm(pid)
+
+
+def cwd(pid):
+    try:
+        return shorten(os.readlink(f"/proc/{pid}/cwd"))
+    except OSError:
+        return ""
+
+
+def pids():
+    return [int(name) for name in os.listdir("/proc") if name.isdigit()]
+
+
+def fido_nodes():
+    nodes = set()
+    for dev in Path("/sys/class/hidraw").glob("hidraw*"):
+        if read(dev / "device/report_descriptor", binary=True).startswith(FIDO_USAGE_PAGE):
+            nodes.add(f"/dev/{dev.name}")
+    return nodes
+
+
+def fido_holders():
+    """PIDs (other than the detector) with a FIDO HID device open."""
+    nodes = fido_nodes()
+    found = []
+    for pid in pids():
+        # The kernel truncates comm to 15 characters.
+        if pid == os.getpid() or comm(pid) == DETECTOR[:15]:
+            continue
+        try:
+            fds = os.listdir(f"/proc/{pid}/fd")
+        except OSError:
+            continue  # exited, or owned by another user (e.g. sudo with pam_u2f)
+        for fd in fds:
+            try:
+                if os.readlink(f"/proc/{pid}/fd/{fd}") in nodes:
+                    found.append(pid)
+                    break
+            except OSError:
+                pass
+    return found
+
+
+def ancestry(pid):
+    chain = []
+    while pid > 1 and len(chain) < 32:
+        chain.append(pid)
+        pid = ppid(pid)
+    return chain
+
+
+def browser_name(pid):
+    name = comm(pid).lower()
+    exe = os.path.basename(read(f"/proc/{pid}/cmdline").split("\0")[0]).lower()
+    for key, label in BROWSERS.items():
+        if key in name or key in exe:
+            return label
+    return ""
+
+
+def active_window():
+    try:
+        out = subprocess.run(["hyprctl", "activewindow", "-j"], check=True, text=True,
+                             capture_output=True, timeout=2).stdout
+        return json.loads(out)
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return {}
+
+
+def describe(pid):
+    """Return (headline, detail lines, PID to terminate on deny or None)."""
+    chain = ancestry(pid)
+    browser = browser_name(pid)
+    if browser:
+        lines = []
+        window = active_window()
+        if window.get("pid") in chain and window.get("title"):
+            lines.append(f"Focused window: {shorten(window['title'])}")
+        return f"{browser}: website sign-in (WebAuthn)", lines, None
+    commands = []
+    for ancestor in chain:
+        name = comm(ancestor)
+        if name in RELAYS:
+            continue
+        if name in CHAIN_END and commands:
+            break
+        commands.append(ancestor)
+        if len(commands) == MAX_CHAIN:
+            break
+    if not commands:
+        commands = [pid]
+    lines = [f"for: {cmdline(parent)}" for parent in commands[1:]]
+    where = cwd(commands[-1])
+    if where:
+        lines.append(f"in: {where}")
+    return cmdline(commands[0]), lines, commands[0]
+
+
+def requesters(kind):
+    if kind == "U2F":
+        found = fido_holders()
+        # A helper and its parent can both hold the device; keep the deepest one.
+        parents = {ancestor for pid in found for ancestor in ancestry(pid)[1:]}
+        return [pid for pid in found if pid not in parents]
+    names = LIKELY.get(kind, set())
+    return [pid for pid in pids() if comm(pid) in names]
+
+
+def explain(kind):
+    """Return (summary, body lines, deny targets) describing who wants the touch.
+
+    Deny targets are (device holder PID, PID to terminate) pairs and exist only
+    for confirmed FIDO requesters that are not browsers.
+    """
+    found = []
+    for _ in range(4):  # the requester may open the device a moment late
+        found = requesters(kind)
+        if found:
+            break
+        time.sleep(0.1)
+    label = KINDS.get(kind, kind)
+    if not found:
+        return (f"YubiKey touch requested ({label})",
+                ["Requester could not be identified."], [])
+    body = []
+    headlines = []
+    targets = []
+    for pid in found:
+        headline, lines, target = describe(pid)
+        if kind == "U2F" and target:
+            targets.append((pid, target))
+        headlines.append(headline)
+        body.extend(lines)
+        body.append(f"pid {pid} · {label}" + ("" if kind == "U2F" else " · best guess"))
+    if len(headlines) > 1:
+        return "YubiKey touch: several requests", headlines + body, targets
+    return f"Touch YubiKey: {headlines[0]}", body, targets
+
+
+def deny(targets):
+    """Terminate requesters that are still holding the FIDO device."""
+    holding = set(fido_holders())
+    for holder, target in targets:
+        if holder not in holding:
+            continue  # finished already; the PID may have been reused
+        for pid in {target, holder}:
+            try:
+                os.kill(pid, signal.SIGTERM)
+                print(f"denied: terminated pid {pid} ({comm(pid)})", flush=True)
+            except OSError as error:
+                print(f"deny failed for pid {pid}: {error}", file=sys.stderr)
+
+
+def await_action(process, targets):
+    for line in process.stdout:
+        if line.strip() == "deny":
+            deny(targets)
+    process.wait()
+
+
+def show(kind):
+    summary, body, targets = explain(kind)
+    command = ["notify-send", "-p", "-a", "YubiKey", "-i", "dialog-password",
+               "-u", "critical", "-t", "0"]
+    if targets:
+        command += ["-A", "deny=Deny"]  # keeps notify-send waiting for the action
+    command += [summary, "\n".join(html.escape(line) for line in body)]
+    try:
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, text=True)
+        notification_id = int(process.stdout.readline().strip())
+    except (OSError, ValueError) as error:
+        print(f"notification failed: {error}", file=sys.stderr)
+        return 0
+    threading.Thread(target=await_action, args=(process, targets), daemon=True).start()
+    return notification_id
+
+
+def close(notification_id):
+    subprocess.run(
+        ["gdbus", "call", "--session", "--dest", "org.freedesktop.Notifications",
+         "--object-path", "/org/freedesktop/Notifications",
+         "--method", "org.freedesktop.Notifications.CloseNotification",
+         str(notification_id)],
+        check=False, capture_output=True, timeout=5,
+    )
+
+
+def listen():
+    path = Path(os.environ["XDG_RUNTIME_DIR"]) / f"{DETECTOR}.socket"
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+        sock.connect(str(path))
+        shown = {}
+        buffer = b""
+        while True:
+            data = sock.recv(64)
+            if not data:
+                raise ConnectionError("detector closed the connection")
+            buffer += data
+            while len(buffer) >= 5:  # messages are fixed-size, e.g. b"U2F_1"
+                message, buffer = buffer[:5].decode(errors="replace"), buffer[5:]
+                kind, _, state = message.partition("_")
+                if state == "1":
+                    if shown.get(kind):
+                        close(shown[kind])
+                    shown[kind] = show(kind)
+                elif shown.get(kind):
+                    close(shown.pop(kind))
+
+
+def main(argv):
+    if argv[:1] == ["--explain"]:
+        summary, body, targets = explain(argv[1].upper() if len(argv) > 1 else "U2F")
+        print("\n".join([summary, *body]))
+        if targets:
+            print("deny would terminate pid " + ", ".join(str(pid) for _, pid in targets))
+        return 0
+    if argv:
+        print(__doc__, file=sys.stderr)
+        return 2
+    try:
+        listen()
+    except (OSError, KeyError) as error:
+        print(f"{DETECTOR} socket unavailable: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
