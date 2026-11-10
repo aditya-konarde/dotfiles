@@ -179,7 +179,7 @@ Keep Hyprland, Noctalia shell/wallpaper/lock transitions, and Kitty cursor effec
 disabled. During an authorized setup, also apply and verify the GTK
 `org.gnome.desktop.interface enable-animations` setting as false. The copy-only
 installer does not do this. Check effective Noctalia settings for runtime overrides;
-use the supplied NeutralDark palette and exclude Kitty from automatic templates.
+use the supplied NeutralOLED palette and exclude Kitty from automatic templates.
 Preserve unrelated local state rather than copying it into this repository.
 
 ## Lockscreen layout setup

@@ -16,7 +16,7 @@ The October 2026 desktop refinement includes:
   assignments, including games. Manual moves and the scratchpad remain available.
   Terminal swallowing is disabled so GUI apps launched from Kitty keep separate
   windows.
-- Noctalia NeutralDark palette, a flat bar with icon-only workspace labels
+- Noctalia NeutralOLED palette (true black for OLED), a flat bar with icon-only workspace labels
   (terminal prompt for 1, globe for Web on 2, app grid for Other on 3), a
   search-first launcher, top-right Control Center, startup DND, and Satty
   screenshot annotation. Shell, wallpaper, and lock-screen animations are disabled.
@@ -111,7 +111,8 @@ The file installer deliberately does not change GSettings or reload the desktop.
 Apps with their own animation preferences may need separate adjustments.
 
 Noctalia UI settings in `~/.local/state/noctalia/settings.toml` can override this
-profile. On an existing installation, choose custom palette `NeutralDark`, turn
+profile. On an existing installation, choose custom palette `NeutralOLED`
+(`noctalia msg color-scheme-set custom NeutralOLED`; `NeutralDark` is the grey alternative), turn
 off pure-black backgrounds and shell animation, disable wallpaper/lock transitions,
 and deselect Kitty under theme templates. Preserve unrelated runtime settings;
 do not replace that state file with a public template. Kitty's fixed palette must

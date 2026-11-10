@@ -89,7 +89,7 @@ settings_show_advanced = false
 gpu_poll_seconds = 5
 
 [theme]
-custom_palette = "NeutralDark"
+custom_palette = "NeutralOLED"
 mode = "dark"
 pure_black_dark = false
 source = "custom"

@@ -35,6 +35,7 @@
 .config/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl
 .config/noctalia/config.toml
 .config/noctalia/palettes/NeutralDark.json
+.config/noctalia/palettes/NeutralOLED.json
 .config/noctalia/wallpapers/monochrome-mist.png
 .config/starship.toml
 .config/xdg-terminal-exec/default.list
@@ -57,4 +58,5 @@
 .local/share/noctalia/plugins/scratch-workspace-indicator/service.luau
 .local/share/noctalia/plugins/scratch-workspace-indicator/translations/en.json
 .local/share/noctalia/plugins/scratch-workspace-indicator/widget.luau
+.local/share/warp-terminal/themes/neutral_oled.yaml
 .zshrc

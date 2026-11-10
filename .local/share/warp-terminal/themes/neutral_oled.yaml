@@ -1,0 +1,25 @@
+name: Neutral OLED
+accent: '#a6c8df'
+cursor: '#d8d8d8'
+background: '#000000'
+foreground: '#d8d8d8'
+details: darker
+terminal_colors:
+  normal:
+    black: '#16181a'
+    red: '#e06c75'
+    green: '#98c379'
+    yellow: '#e5c07b'
+    blue: '#61afef'
+    magenta: '#c678dd'
+    cyan: '#56b6c2'
+    white: '#c8ccd2'
+  bright:
+    black: '#727985'
+    red: '#e06c75'
+    green: '#98c379'
+    yellow: '#e5c07b'
+    blue: '#61afef'
+    magenta: '#c678dd'
+    cyan: '#56b6c2'
+    white: '#e6e6e6'

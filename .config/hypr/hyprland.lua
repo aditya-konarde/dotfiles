@@ -23,8 +23,9 @@ require("noctalia").apply_theme()
 hl.config({
     general = {
         col = {
-            active_border = "rgb(36465f)",
-            inactive_border = "rgb(36465f)",
+            -- Dim on purpose: a static border is a burn-in risk on OLED.
+            active_border = "rgb(232d3d)",
+            inactive_border = "rgb(232d3d)",
         },
     },
 })

@@ -206,3 +206,6 @@ __pycache__/
 !/.local/share/noctalia/plugins/scratch-workspace-indicator/service.luau
 !/.local/share/noctalia/plugins/scratch-workspace-indicator/translations/en.json
 !/.local/share/noctalia/plugins/scratch-workspace-indicator/widget.luau
+!/.local/share/warp-terminal/
+!/.local/share/warp-terminal/themes/
+!/.local/share/warp-terminal/themes/neutral_oled.yaml
