@@ -5,7 +5,6 @@
 .config/alacritty/themes/noctalia.toml
 .config/kitty/kitty.conf
 .config/kitty/startup.session
-.config/kitty/themes/noctalia.conf
 .config/zellij/config.kdl
 .config/zellij/layouts/default.kdl
 .config/zellij/layouts/fat.kdl

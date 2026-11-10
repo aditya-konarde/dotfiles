@@ -9,6 +9,31 @@ import shutil
 import tempfile
 
 
+def manifest_entries(manifest, repo, target):
+    """Parse and validate installer source and destination paths."""
+    entries = []
+    for line in manifest.read_text().splitlines():
+        if not line or line.startswith("#"):
+            continue
+        source_name, _, destination_name = line.partition(" -> ")
+        source_rel = Path(source_name)
+        dest_rel = Path(destination_name or source_name)
+        if any(p.is_absolute() or ".." in p.parts for p in (source_rel, dest_rel)):
+            raise ValueError(f"invalid manifest entry: {line}")
+        source = repo / source_rel
+        dest = target / dest_rel
+        if source.is_symlink() or not source.is_file():
+            raise ValueError(f"missing or symlinked source: {source_rel}")
+        if not source.resolve().is_relative_to(repo):
+            raise ValueError(f"source escapes the repository: {source_rel}")
+        if not dest.parent.resolve().is_relative_to(target):
+            raise ValueError(f"destination parent escapes target via a symlink: {dest_rel}")
+        if dest.exists() and not dest.is_file():
+            raise ValueError(f"destination is not a file: {dest_rel}")
+        entries.append((source, dest, dest_rel))
+    return entries
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True, type=Path)
@@ -17,26 +42,10 @@ def main():
     args = parser.parse_args()
     repo = Path(__file__).resolve().parent.parent
     target = args.target.expanduser().resolve()
-    entries = []
-    for line in args.manifest.read_text().splitlines():
-        if not line or line.startswith("#"):
-            continue
-        source_name, _, destination_name = line.partition(" -> ")
-        source_rel = Path(source_name)
-        dest_rel = Path(destination_name or source_name)
-        if any(p.is_absolute() or ".." in p.parts for p in (source_rel, dest_rel)):
-            parser.error(f"invalid manifest entry: {line}")
-        source = repo / source_rel
-        dest = target / dest_rel
-        if source.is_symlink() or not source.is_file():
-            parser.error(f"missing or symlinked source: {source_rel}")
-        if not source.resolve().is_relative_to(repo):
-            parser.error(f"source escapes the repository: {source_rel}")
-        if not dest.parent.resolve().is_relative_to(target):
-            parser.error(f"destination parent escapes target via a symlink: {dest_rel}")
-        if dest.exists() and not dest.is_file():
-            parser.error(f"destination is not a file: {dest_rel}")
-        entries.append((source, dest, dest_rel))
+    try:
+        entries = manifest_entries(args.manifest, repo, target)
+    except ValueError as error:
+        parser.error(str(error))
     if not args.apply:
         for _, _, rel in entries:
             print(f"Would copy {rel}")

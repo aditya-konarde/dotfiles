@@ -22,13 +22,11 @@ The October 2026 desktop refinement includes:
   screenshot annotation. Shell, wallpaper, and lock-screen animations are disabled.
   The workspace widget uses JetBrainsMono Nerd Font; numeric IDs and shortcuts
   remain unchanged, and empty workspaces keep their icons visible.
-- Local Noctalia plugins for a distinct scratch-workspace indicator and audio
-  output cycling from Control Center Home. Public plugin IDs use `local/`.
+- A local Noctalia plugin for audio output cycling from Control Center Home.
+  Its public plugin ID uses `local/`.
 - Wispr Flow as a default dictation app, with a frameless bar pinned across
   workspaces at bottom center, 24 pixels above the screen edge. The rule matches
   its initial title because the app changes the title to `Status` after opening.
-- An optional Handy AppImage launcher. The current profile does not start or bind
-  Handy because Wispr Flow handles dictation.
 - Kitty split layouts with focus on mouse hover and steady pane dividers,
   automatic clipboard copying on selection, running-command close
   confirmation, current-directory tabs, searchable scrollback, and an opaque
@@ -60,8 +58,6 @@ install its AUR package with Paru during dependency setup:
 paru -S wispr-flow-appimage
 ```
 
-Handy is optional; its AppImage is not included.
-
 Preview the exact files, then install when ready:
 
 ```sh
@@ -75,20 +71,31 @@ relative paths. It copies files individually so theme generation and application
 writes remain outside this repository. It does not install packages or reload the
 running desktop. `--target /path/to/test-home` supports a separate destination.
 
-Before using the desktop, edit `config/variables.lua` for applications and
-`config/monitors.lua` for your monitor. The supplied 4K/120 Hz HDR mode is a
-hardware preference; change it to `preferred` for a different display. Add `~/.local/bin`
-to your graphical session's PATH for the helper commands.
-
-After installation, enable the plugins in Noctalia Settings → Plugins, or run:
+Compare the manifest with a home directory without changing files:
 
 ```sh
-noctalia msg plugins enable local/scratch-workspace-indicator
+python3 scripts/check-drift.py
+python3 scripts/check-drift.py --target /path/to/test-home
+```
+
+The check reports missing files, changed contents, and symlinks, and exits nonzero
+when it finds differences. Local adaptations and private sanitization can be
+intentional; review differences before copying either direction.
+
+Before using the desktop, edit `config/variables.lua` for applications and
+`config/monitors.lua` for your monitor. The supplied 4K/120 Hz HDR mode is a
+hardware preference; change it to `preferred` for a different display. The
+installed `~/.config/uwsm/env` adds `~/.local/bin` to the graphical session's PATH
+for the helper commands; it takes effect at the next login.
+
+After installation, enable the plugin in Noctalia Settings → Plugins, or run:
+
+```sh
 noctalia msg plugins enable local/audio-output-cycle
 ```
 
-The plugins use neutral public IDs, so they must be enabled separately from any
-existing private copies. Manage older copies in Noctalia Settings. The bounded
+The plugin uses a neutral public ID, so it must be enabled separately from any
+existing private copy. Manage older copies in Noctalia Settings. The bounded
 lock/display recovery helper is retained. Its diagnostic collector is expected at
 `~/.local/state/hypr-lock-display/diagnostics/capture.py` and is not installed by
 this repository; the helper preserves the session lock and writes diagnostic
@@ -129,21 +136,6 @@ automatic paste, matching Kitty and GUI apps instead of choosing `Ctrl+Shift+V`
 for text in auto mode.
 Launcher and utility binds call the local `~/hermes-workspace/.../desktop.py`
 helper; that helper is not copied into this public profile.
-
-## Minimal lockscreen
-
-The Noctalia profile includes a monochrome mist landscape, clock/date near the
-upper centre, and a compact centred unlock field with a shield icon. Calendar and
-weather widgets are omitted. The bundled background is AI-generated; optional PNG
-metadata is stripped. Its exact content hash is reviewed by the public-config checker.
-
-Before using the layout, replace every `OUTPUT_NAME` in `.config/noctalia/config.toml`
-(including the login-box table key) with the intended connector from `hyprctl monitors`.
-Placement uses a 3840×2160 reference canvas. Use `noctalia msg lockscreen-widgets-edit`
-on an empty workspace to adapt placement/size to your display, then click Done.
-On existing installations, saved `[lockscreen]` and `[lockscreen_widgets]` values in
-Noctalia's state file override these defaults; back up and reconcile only those
-sections, preserving unrelated state. The installer does not modify that state file.
 
 ## macOS and older desktops
 

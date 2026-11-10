@@ -51,7 +51,7 @@ scripts. The following groups are a starting inventory, not fixed package names:
 | Terminal appearance | Fontconfig and the actual Nerd Font families named in the installed Kitty and Alacritty configs |
 | Default dictation | Wispr Flow; on CachyOS/Arch install with `paru -S wispr-flow-appimage` during dependency setup |
 | Other selected apps | Zsh/Fish, Zellij, Alacritty, btop, Starship, mpv, MangoHud, Micro, GitHub CLI, and enabled shell helpers |
-| Optional integrations | Handy AppImage, ChatGPT launcher, developer CLI tools, keyring helpers, and ROCm settings only when requested or applicable |
+| Optional integrations | ChatGPT launcher, developer CLI tools, keyring helpers, and ROCm settings only when requested or applicable |
 | Repo maintenance | Python and Gitleaks for the public-config checks and commit hook |
 
 - Check both command availability and compatibility. The reference config was
@@ -104,7 +104,7 @@ scripts. The following groups are a starting inventory, not fixed package names:
 ### 4. Integrate the graphical session
 
 - Ensure `~/.local/bin` is in the graphical session's PATH, not just the terminal's
-  PATH. Confirm the installed helpers are executable and resolve by command name.
+  PATH. The manifest installs `~/.config/uwsm/env` for this; it applies at the next login. Confirm the installed helpers are executable and resolve by command name.
 - Verify the session launcher loads the intended Lua config. Make targeted changes
   to the installed launcher when needed; keep a way to return to the old session.
 - Ensure exactly one polkit agent starts with the session. This Noctalia profile
@@ -114,11 +114,10 @@ scripts. The following groups are a starting inventory, not fixed package names:
   integration; D-Bus-activated/static portal units do not need forced enabling.
 - Verify audio session services and `pactl` access without switching outputs as an
   incidental check. Refresh desktop-entry discovery when supported and needed.
-- With Noctalia running, inspect the plugin list and enable the public IDs when
+- With Noctalia running, inspect the plugin list and enable the public ID when
   not already enabled:
 
   ```sh
-  noctalia msg plugins enable local/scratch-workspace-indicator
   noctalia msg plugins enable local/audio-output-cycle
   ```
 
@@ -135,8 +134,7 @@ Run these against the installed files, using the intended user's home:
 ```sh
 Hyprland --verify-config --config "$HOME/.config/hypr/hyprland.lua"
 noctalia config validate "$HOME/.config/noctalia/config.toml"
-noctalia plugins lint "$HOME/.local/share/noctalia/plugins/audio-output-cycle" \
-  "$HOME/.local/share/noctalia/plugins/scratch-workspace-indicator"
+noctalia plugins lint "$HOME/.local/share/noctalia/plugins/audio-output-cycle"
 zsh -n "$HOME/.zshrc"
 fish --no-execute "$HOME/.config/fish/config.fish"
 ```
@@ -148,8 +146,7 @@ lint and activation in the real running session must also pass.
 Inside the actual graphical session, check `hyprctl configerrors`, Noctalia status
 and plugin activation, the effective monitor mode, portals, polkit, and audio.
 Verify a terminal and the configured launchers open, workspace movement and scratch
-toggle work, the scratch indicator renders, and the Control Center audio shortcut
-is present. Test audio switching or microphone recording only within the user's
+toggle work, and the Control Center audio shortcut is present. Test audio switching or microphone recording only within the user's
 requested scope; do not disrupt ongoing playback or start recording implicitly.
 
 If graphical access is unavailable, report "files installed; session verification
@@ -181,17 +178,6 @@ disabled. During an authorized setup, also apply and verify the GTK
 installer does not do this. Check effective Noctalia settings for runtime overrides;
 use the supplied NeutralOLED palette and exclude Kitty from automatic templates.
 Preserve unrelated local state rather than copying it into this repository.
-
-## Lockscreen layout setup
-
-The lockscreen template uses `OUTPUT_NAME` rather than a host connector. During
-authorized setup, replace all occurrences, including the login-box key, with the
-verified target output. Adapt the 3840×2160 reference layout in the unlocked widget
-editor with user authorization. Reconcile only lockscreen overrides in existing
-Noctalia state; never copy the entire private state file into the repository.
-The generated wallpaper is installed by the manifest. Its metadata-free PNG is
-allowed by an exact reviewed SHA-256; a replacement requires fresh visual and
-metadata review and an updated digest, not a blanket binary exclusion.
 
 ## Repository changes and publication
 

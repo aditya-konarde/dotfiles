@@ -14,10 +14,8 @@ import subprocess
 import sys
 
 
-# Exact reviewed asset only: generated monochrome landscape, optional PNG metadata removed.
-REVIEWED_BINARY_ASSETS = {
-    '.config/noctalia/wallpapers/monochrome-mist.png': '0361f7de880040c25c2dba397cc4c89ac4fc91bd17ccd979f6bb4577b245697e',
-}
+# Binary assets need an exact reviewed SHA-256 here; none are published currently.
+REVIEWED_BINARY_ASSETS = {}
 
 RULES = {
     "personal home directory": re.compile(

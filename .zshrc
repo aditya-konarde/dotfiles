@@ -4,9 +4,21 @@ if [[ "$OSTYPE" == darwin* ]]; then
   return
 fi
 
+# CachyOS expands its cleanup alias at startup. Defer that package query until
+# the alias is used, so pacman errors don't interrupt the instant prompt.
+_cachyos_startup_pacman() {
+  if [[ "$*" != "-Qtdq" ]]; then
+    command pacman "$@"
+  fi
+}
+alias pacman='_cachyos_startup_pacman'
+
 # CachyOS initializes Oh My Zsh, Powerlevel10k, and the instant prompt.
 [[ -r /usr/share/cachyos-zsh-config/cachyos-config.zsh ]] &&
   source /usr/share/cachyos-zsh-config/cachyos-config.zsh
+unalias pacman
+unfunction _cachyos_startup_pacman
+alias cleanup='sudo pacman -Rsn $(pacman -Qtdq)'
 
 # Disable command auto-correction (the "correct 'x' to 'y' [nyae]?" prompts).
 # CachyOS's config enables it via ENABLE_CORRECTION; turn it back off here so
@@ -192,9 +204,6 @@ fi
 # npv — neural player (optimized Strix Halo 4K restoration)
 alias npv="$HOME/.local/bin/npv"
 
-# Route Droid through the OpenCode Go launcher.
-alias droid='droid-go'
-
 # Initialize zoxide before routing cd through it.
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
@@ -210,6 +219,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # gcx: opt out of anonymous usage telemetry (honored by gcx >= 1.0)
 export GCX_TELEMETRY=disabled
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Credentials, remote hosts, and machine-specific aliases stay in this local file.
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

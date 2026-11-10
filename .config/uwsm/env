@@ -1,0 +1,2 @@
+# Sourced by UWSM at login; makes user-local helpers visible to the graphical session.
+export PATH="$HOME/.local/bin:$PATH"
