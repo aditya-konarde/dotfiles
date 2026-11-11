@@ -1,0 +1,33 @@
+name = "Tree Split"
+color = "cyan"
+
+# Root node: Horizontal split (Left side vs Right side)
+[[panes]]
+id = "root"
+split = "horizontal"
+children = ["left_pane", "right_split"]
+
+# Left main pane
+[[panes]]
+id = "left_pane"
+type = "terminal"
+directory = "~"
+is_focused = true
+
+# Right branch: Vertical split (Top-Right vs Bottom-Right)
+[[panes]]
+id = "right_split"
+split = "vertical"
+children = ["top_right_pane", "bottom_right_pane"]
+
+# Top-Right pane
+[[panes]]
+id = "top_right_pane"
+type = "terminal"
+directory = "~"
+
+# Bottom-Right pane
+[[panes]]
+id = "bottom_right_pane"
+type = "terminal"
+directory = "~"

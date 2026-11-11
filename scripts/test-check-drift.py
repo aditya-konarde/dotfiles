@@ -46,6 +46,32 @@ class DriftCheckTests(unittest.TestCase):
         dest.symlink_to(self.root / "missing")
         self.assertIn("Symlink: nested/copy", self.check().stdout)
 
+    def test_template_home_expansion(self):
+        source = self.root / "template.toml"
+        source.write_text('path = "$HOME/.config/app"\n')
+        literal = self.root / "literal.toml"
+        literal.write_text('path = "$HOME/.config/app"\n')
+        self.manifest.write_text(
+            f"{source.relative_to(REPO)} -> nested/templated.toml [template]\n"
+            f"{literal.relative_to(REPO)} -> nested/literal.toml\n"
+        )
+        subprocess.run(
+            ["python3", str(INSTALL), "--manifest", str(self.manifest),
+             "--target", str(self.target), "--apply"], check=True, capture_output=True,
+        )
+        home = self.target.resolve()
+        self.assertEqual(
+            (self.target / "nested/templated.toml").read_text(), f'path = "{home}/.config/app"\n'
+        )
+        self.assertEqual(
+            (self.target / "nested/literal.toml").read_text(), 'path = "$HOME/.config/app"\n'
+        )
+        self.assertEqual(self.check().returncode, 0)
+
+    def test_unknown_manifest_flag(self):
+        self.manifest.write_text("README.md -> nested/copy [bogus]\n")
+        self.assertEqual(self.check().returncode, 2)
+
     def test_invalid_manifest(self):
         self.manifest.write_text("../escape\n")
         self.assertEqual(self.check().returncode, 2)

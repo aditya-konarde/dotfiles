@@ -200,5 +200,7 @@ __pycache__/
 !/.local/share/noctalia/plugins/audio-output-cycle/plugin.toml
 !/.local/share/noctalia/plugins/audio-output-cycle/shortcut.luau
 !/.local/share/warp-terminal/
+!/.local/share/warp-terminal/tab_configs/
+!/.local/share/warp-terminal/tab_configs/startup_config.toml
 !/.local/share/warp-terminal/themes/
 !/.local/share/warp-terminal/themes/neutral_oled.yaml

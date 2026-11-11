@@ -18,16 +18,18 @@ def main():
     installer = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(installer)
     try:
-        entries = installer.manifest_entries(args.manifest, repo, args.target.expanduser().resolve())
+        target = args.target.expanduser().resolve()
+        entries = installer.manifest_entries(args.manifest, repo, target)
         differences = 0
-        for source, dest, relative in entries:
+        for source, dest, relative, template in entries:
+            expected = installer.rendered_bytes(source, target, template)
             if dest.is_symlink():
                 print(f"Symlink: {relative}")
                 differences += 1
             elif not dest.is_file():
                 print(f"Missing: {relative}")
                 differences += 1
-            elif source.read_bytes() != dest.read_bytes():
+            elif expected != dest.read_bytes():
                 print(f"Drift: {relative}")
                 differences += 1
         print(f"Compared {len(entries)} files: {differences} differences.")

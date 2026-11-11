@@ -88,6 +88,10 @@ scripts. The following groups are a starting inventory, not fixed package names:
 - Use the manifest installer and retain its reported backup directory. Preserve
   the relative paths of backups. Never replace or symlink the entire `.config`
   directory, copy a whole home directory, or delete the user's old setup.
+- Manifest entries ending in `[template]` expand `$HOME` to the target home on
+  install and in the drift check. Use them only for files whose format requires an
+  absolute home path and does not expand `~`, such as Warp's `settings.toml`, whose
+  `default_tab_config_path` Warp clears when given a `~/` value.
 - Identical files are skipped, but a repeat install overwrites selected files
   changed since installation. Inspect and preserve those local customizations
   before reapplying; do not repeatedly overwrite a user's monitor or app choices.

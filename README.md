@@ -33,6 +33,10 @@ The October 2026 desktop refinement includes:
   palette independent of Noctalia. Cursor blinking/trails and bell animation are
   disabled. Also included: Alacritty, Zellij, Starship,
   Fish/Zsh, btop, MangoHud, and a Wayland ChatGPT launcher override.
+- Warp terminal settings: the `Neutral OLED` custom theme, compact vertical tabs
+  with the working directory as primary info, `JetBrainsMono Nerd Font Mono`, a
+  `Tree Split` default tab config, and separate agent permission profiles for the
+  GUI and the Warp Agent CLI.
 - mpv Vulkan playback with ArtCNN/CfL shaders and an optional FSRCNNX comparison.
 
 See [Hyprland keybindings](.config/hypr/KEYBINDINGS.md). The config was checked
@@ -71,6 +75,11 @@ relative paths. It copies files individually so theme generation and application
 writes remain outside this repository. It does not install packages or reload the
 running desktop. `--target /path/to/test-home` supports a separate destination.
 
+A manifest entry ending in `[template]` has `$HOME` replaced with the target home
+while installing, so a tracked file can reference the user's own directories
+without hardcoding them. `check-drift.py` applies the same expansion, so template
+entries still compare clean.
+
 Compare the manifest with a home directory without changing files:
 
 ```sh
@@ -100,6 +109,23 @@ lock/display recovery helper is retained. Its diagnostic collector is expected a
 `~/.local/state/hypr-lock-display/diagnostics/capture.py` and is not installed by
 this repository; the helper preserves the session lock and writes diagnostic
 output only under `~/.local/state/`.
+
+### Warp terminal
+
+The manifest installs Warp's curated settings: `~/.config/warp-terminal/settings.toml`,
+its `keybindings.yaml`, the Warp Agent CLI profile in
+`~/.config/warp-terminal/cli/settings.toml`, the `Tree Split` tab config at
+`~/.warp/tab_configs/tree_split.toml` and
+`~/.local/share/warp-terminal/tab_configs/startup_config.toml`, and the
+`Neutral OLED` theme already tracked under `.local/share/warp-terminal/themes/`.
+
+Warp stores the custom theme and default tab config as absolute paths and does not
+expand `~` in them: a `~/` value makes Warp clear `default_tab_config_path` and
+fall back to `default_session_mode = "terminal"`. The tracked `settings.toml`
+therefore uses `$HOME` and is marked `[template]` in the manifest, so the
+installer substitutes the target home. `user_preferences.json` holds account and
+session state (usage counters, banner flags, recent repository paths) and is
+deliberately not tracked.
 
 ### YubiKey touch prompt (optional)
 

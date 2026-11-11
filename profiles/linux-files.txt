@@ -38,6 +38,9 @@
 .config/starship.toml
 .config/systemd/user/yubikey-touch-prompt.service
 .config/uwsm/env
+.config/warp-terminal/cli/settings.toml
+.config/warp-terminal/keybindings.yaml
+.config/warp-terminal/settings.toml -> .config/warp-terminal/settings.toml [template]
 .config/xdg-terminal-exec/default.list
 .config/zellij/config.kdl
 .config/zellij/layouts/default.kdl
@@ -53,5 +56,7 @@
 .local/share/applications/kitty.desktop
 .local/share/noctalia/plugins/audio-output-cycle/plugin.toml
 .local/share/noctalia/plugins/audio-output-cycle/shortcut.luau
+.local/share/warp-terminal/tab_configs/startup_config.toml
 .local/share/warp-terminal/themes/neutral_oled.yaml
+.warp/tab_configs/tree_split.toml
 .zshrc
