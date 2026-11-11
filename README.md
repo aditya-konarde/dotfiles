@@ -142,7 +142,10 @@ when the touch completes. Command lines appear in notification history.
 For confirmed requests from your own non-browser processes the notification has
 a Deny action. It sends SIGTERM to the requesting command (for example `ssh`)
 and its key helper, so the operation fails instead of waiting for a touch.
-Browser requests are cancelled in the browser's own dialog.
+Browser requests are cancelled in the browser's own dialog. Deny is not offered
+when the request comes through an agent such as `ssh-agent`, or when the only
+process found is a shell or `systemd`; stopping those would not cancel the
+request and would disrupt the session.
 
 Install `yubikey-touch-detector`, then enable the service:
 

@@ -37,6 +37,10 @@ BROWSERS = {"brave": "Brave", "firefox": "Firefox", "librewolf": "LibreWolf",
 LIKELY = {"GPG": {"gpg", "gpg2", "gpgsm"},
           "MAC": {"ykchalresp", "ykman", "keepassxc"}}
 KINDS = {"U2F": "FIDO/U2F", "GPG": "OpenPGP", "MAC": "HMAC challenge"}
+# Long-lived processes that must never be terminated by Deny. Agents relay
+# requests for other clients, so killing one would not stop the requester.
+NEVER_DENY = CHAIN_END | {"ssh-agent", "gpg-agent", "systemd-logind", "dbus-daemon",
+                          "dbus-broker"}
 MAX_CMD = 110
 MAX_CHAIN = 4
 
@@ -167,7 +171,10 @@ def describe(pid):
     where = cwd(commands[-1])
     if where:
         lines.append(f"in: {where}")
-    return cmdline(commands[0]), lines, commands[0]
+    target = commands[0]
+    if comm(target) in NEVER_DENY or comm(pid) in NEVER_DENY:
+        target = None  # relayed or orphaned request: no safe process to stop
+    return cmdline(commands[0]), lines, target
 
 
 def requesters(kind):
